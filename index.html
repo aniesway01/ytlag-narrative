@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>你投球像個女孩 — 互動敘事地圖</title>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --bg2: #16213e;
+  --bg3: #0f3460;
+  --text: #e0e0e0;
+  --text2: #a0a0b0;
+  --accent: #e91e63;
+  --accent2: #533483;
+  --border: #2a2a4a;
+  --card: #1e1e3a;
+  --tag-group: #4a9;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  height: 100vh;
+  overflow: hidden;
+}
+.app { display: flex; height: 100vh; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.toolbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  scroll-behavior: smooth;
+}
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--text2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.toggle-row input { accent-color: var(--accent); cursor: pointer; }
+.toggle-row:hover { color: var(--text); }
+.toolbar .stats {
+  font-size: 12px;
+  color: var(--text2);
+  white-space: nowrap;
+}
+.toolbar .stats b { color: var(--accent); }
+.search-box {
+  padding: 4px 10px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  width: 200px;
+  flex-shrink: 1;
+  min-width: 120px;
+}
+.search-box:focus { outline: none; border-color: var(--accent); }
+.toolbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.view-toggle { display: flex; gap: 4px; }
+.view-btn {
+  padding: 4px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  font-size: 12px;
+  cursor: pointer;
+}
+.view-btn.active { background: var(--accent2); color: #fff; border-color: var(--accent2); }
+
+/* Group header (chapter/tag) */
+.group-header {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent2), var(--bg3));
+  padding: 16px 20px;
+  margin: 24px 0 8px 0;
+  border-radius: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  cursor: pointer;
+  user-select: none;
+}
+.group-header:first-child { margin-top: 0; }
+.group-header h2 {
+  font-size: 20px;
+  color: #fff;
+  margin: 0 0 4px 0;
+  border: none;
+  padding: 0;
+}
+.group-header .group-stats {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+}
+.group-header .group-stats b { color: var(--accent); }
+.group-body { display: none; }
+.group-body.open { display: block; }
+
+.passage {
+  background: var(--card);
+  padding: 12px 16px;
+  margin: 4px 0;
+  border-radius: 6px;
+  border-left: 3px solid transparent;
+  transition: border-color 0.2s;
+}
+.passage:hover { border-left-color: var(--accent); }
+.passage .pid {
+  font-size: 11px;
+  color: var(--text2);
+  float: right;
+  font-family: monospace;
+}
+.passage .pname {
+  font-size: 11px;
+  color: var(--tag-group);
+  margin-bottom: 4px;
+  font-family: monospace;
+}
+.passage .text { font-size: 14px; line-height: 1.8; }
+.passage .text-en {
+  font-size: 11px;
+  color: var(--text2);
+  margin-top: 6px;
+  font-style: italic;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  max-height: 120px;
+  overflow: hidden;
+}
+.passage .tag-row { margin-bottom: 4px; }
+.passage .tag {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 8px;
+  background: rgba(74,153,153,0.2);
+  color: var(--tag-group);
+  font-size: 11px;
+  margin-right: 4px;
+}
+.loading {
+  text-align: center;
+  padding: 60px;
+  color: var(--text2);
+  font-size: 18px;
+}
+.loading .spinner {
+  display: inline-block;
+  width: 40px; height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent2); }
+
+@media (max-width: 768px) {
+  .passage .text { font-size: 15px; line-height: 1.9; }
+  .toolbar { padding: 6px 10px; gap: 6px; }
+  .search-box { width: 100%; }
+  .toolbar-right { margin-left: 0; width: 100%; flex-wrap: wrap; justify-content: center; }
+  .view-toggle { width: 100%; justify-content: center; }
+  .group-header h2 { font-size: 17px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="main">
+    <div class="toolbar">
+      <input type="text" class="search-box" id="searchBox" placeholder="搜尋文本 / 段落名稱...">
+      <div class="stats" id="stats"></div>
+      <div class="toolbar-right">
+        <div class="toggle-row" id="toggleZhRow">
+          <input type="checkbox" id="showZh" checked>
+          <label for="showZh">中文翻譯</label>
+        </div>
+        <div class="toggle-row">
+          <input type="checkbox" id="showEn">
+          <label for="showEn">英文原文</label>
+        </div>
+        <div class="toggle-row">
+          <input type="checkbox" id="showName">
+          <label for="showName">段落名</label>
+        </div>
+        <div class="view-toggle">
+          <button class="view-btn active" data-view="group" id="viewGroup">按分類</button>
+          <button class="view-btn" data-view="all" id="viewAll">全部段落</button>
+        </div>
+      </div>
+    </div>
+    <div class="content" id="content">
+      <div class="loading">
+        <div class="spinner"></div>
+        <div>載入敘事數據中...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// === Config (injected by build script) ===
+const GAME_CONFIG = {"title": "You Throw Like A Girl", "title_zh": "你投球像個女孩", "color_accent": "#e91e63"};
+
+// === Global State ===
+let DATA = null;
+let searchQuery = '';
+let showZh = true;
+let showEn = false;
+let showName = false;
+let currentView = 'group';
+
+// === Data Loading ===
+async function loadData() {
+  const resp = await fetch('data/passages.json?v=1');
+  DATA = await resp.json();
+  // Hide ZH toggle if no translations
+  if (!DATA.meta.has_zh) {
+    document.getElementById('toggleZhRow').style.display = 'none';
+    showZh = false;
+    showEn = true;
+    document.getElementById('showEn').checked = true;
+  }
+  init();
+}
+
+// === Filtering ===
+function getFiltered() {
+  let passages = DATA.passages;
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    passages = passages.filter(p =>
+      (p.content_zh || '').toLowerCase().includes(q) ||
+      (p.content || '').toLowerCase().includes(q) ||
+      (p.name || '').toLowerCase().includes(q) ||
+      (p.group || '').toLowerCase().includes(q)
+    );
+  }
+  return passages;
+}
+
+// === Grouping ===
+function groupPassages(passages) {
+  const groups = new Map();
+  passages.forEach(p => {
+    const g = p.group || '(未分類)';
+    if (!groups.has(g)) groups.set(g, []);
+    groups.get(g).push(p);
+  });
+  // Sort: largest groups first, but (未分類) always last
+  const sorted = Array.from(groups.entries()).sort((a, b) => {
+    if (a[0] === '(未分類)') return 1;
+    if (b[0] === '(未分類)') return -1;
+    return b[1].length - a[1].length;
+  });
+  return sorted;
+}
+
+// === Passage HTML ===
+function passageHtml(p) {
+  const pid = p.pid != null ? `<span class="pid">#${p.pid}</span>` : '';
+  const pname = showName ? `<div class="pname">${escHtml(p.name)}</div>` : '';
+  const tags = (p.tags && p.tags.length > 0)
+    ? `<div class="tag-row">${p.tags.map(t => `<span class="tag">${escHtml(t)}</span>`).join('')}</div>`
+    : '';
+
+  let textHtml = '';
+  if (showZh && p.content_zh) {
+    textHtml += `<div class="text">${escHtml(p.content_zh)}</div>`;
+  }
+  if (showEn && p.content) {
+    if (showZh && p.content_zh) {
+      textHtml += `<div class="text-en">${escHtml(p.content)}</div>`;
+    } else {
+      textHtml += `<div class="text">${escHtml(p.content)}</div>`;
+    }
+  }
+  if (!textHtml) {
+    textHtml = `<div class="text" style="color:var(--text2)">(無內容)</div>`;
+  }
+
+  return `<div class="passage">${pid}${pname}${tags}${textHtml}</div>`;
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// === Group View ===
+function renderGroupView(passages) {
+  const content = document.getElementById('content');
+  content.innerHTML = '';
+  const groups = groupPassages(passages);
+
+  let total = 0;
+  groups.forEach(([gName, gPassages]) => {
+    total += gPassages.length;
+    const header = document.createElement('div');
+    header.className = 'group-header';
+    // Find display name from DATA.groups if available
+    const gInfo = (DATA.groups || []).find(g => g.id === gName);
+    const displayName = gInfo ? (gInfo.name_zh || gInfo.name || gName) : gName;
+    header.innerHTML = `
+      <h2>${escHtml(displayName)}</h2>
+      <div class="group-stats"><b>${gPassages.length}</b> 段落</div>
+    `;
+
+    const body = document.createElement('div');
+    body.className = 'group-body';
+
+    header.addEventListener('click', () => {
+      const isOpen = body.classList.contains('open');
+      if (isOpen) {
+        body.classList.remove('open');
+      } else {
+        body.classList.add('open');
+        if (!body.dataset.rendered) {
+          renderPassageChunked(body, gPassages, 0);
+          body.dataset.rendered = '1';
+        }
+      }
+    });
+
+    content.appendChild(header);
+    content.appendChild(body);
+  });
+
+  document.getElementById('stats').innerHTML =
+    `<b>${groups.length}</b> 分類 · <b>${total}</b> 段落`;
+}
+
+// === All Passages View ===
+function renderAllView(passages) {
+  const content = document.getElementById('content');
+  content.innerHTML = '';
+  document.getElementById('stats').innerHTML = `<b>${passages.length}</b> 段落`;
+  renderPassageChunked(content, passages, 0);
+}
+
+// === Chunked rendering for large datasets ===
+function renderPassageChunked(container, passages, startIdx) {
+  const CHUNK = 100;
+  const end = Math.min(startIdx + CHUNK, passages.length);
+  let html = '';
+  for (let i = startIdx; i < end; i++) {
+    html += passageHtml(passages[i]);
+  }
+  container.insertAdjacentHTML('beforeend', html);
+
+  if (end < passages.length) {
+    const sentinel = document.createElement('div');
+    sentinel.className = 'loading';
+    sentinel.innerHTML = `<div style="font-size:13px;cursor:pointer" onclick="this.parentElement.remove()">載入更多 (${end}/${passages.length})...</div>`;
+    container.appendChild(sentinel);
+
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        obs.disconnect();
+        sentinel.remove();
+        renderPassageChunked(container, passages, end);
+      }
+    });
+    obs.observe(sentinel);
+  }
+}
+
+// === Main render ===
+function resetAndRender() {
+  const passages = getFiltered();
+  if (currentView === 'group') {
+    renderGroupView(passages);
+  } else {
+    renderAllView(passages);
+  }
+}
+
+// === View switching ===
+function setActiveView(view) {
+  currentView = view;
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(view === 'group' ? 'viewGroup' : 'viewAll').classList.add('active');
+  resetAndRender();
+}
+
+// === Init ===
+function init() {
+  document.title = (GAME_CONFIG.title_zh || GAME_CONFIG.title || 'Game') + ' — 互動敘事地圖';
+
+  let searchTimeout;
+  document.getElementById('searchBox').addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      searchQuery = e.target.value.trim();
+      resetAndRender();
+    }, 300);
+  });
+
+  document.getElementById('showZh').addEventListener('change', (e) => {
+    showZh = e.target.checked;
+    clearRenderedCache();
+    resetAndRender();
+  });
+  document.getElementById('showEn').addEventListener('change', (e) => {
+    showEn = e.target.checked;
+    clearRenderedCache();
+    resetAndRender();
+  });
+  document.getElementById('showName').addEventListener('change', (e) => {
+    showName = e.target.checked;
+    clearRenderedCache();
+    resetAndRender();
+  });
+
+  document.getElementById('viewGroup').addEventListener('click', () => setActiveView('group'));
+  document.getElementById('viewAll').addEventListener('click', () => setActiveView('all'));
+
+  resetAndRender();
+}
+
+function clearRenderedCache() {
+  document.querySelectorAll('.group-body').forEach(div => {
+    div.dataset.rendered = '';
+  });
+}
+
+// Start
+loadData();
+</script>
+</body>
+</html>
