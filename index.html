@@ -274,6 +274,13 @@ body {
   white-space: pre-wrap;
   word-break: break-word;
 }
+.passage-img {
+  max-width: 100%;
+  max-height: 400px;
+  border-radius: 8px;
+  margin: 8px 0;
+  display: block;
+}
 .passage .text-en {
   font-size: 12px;
   color: var(--text2);
@@ -402,7 +409,7 @@ body {
 
 <script>
 // === Config (injected by build script) ===
-const GAME_CONFIG = {"title": "You Throw Like A Girl", "title_zh": "你丟球像個女孩", "color_accent": "#e91e63"};
+const GAME_CONFIG = {"title": "You Throw Like A Girl", "title_zh": "你丟球像個女孩", "color_accent": "#e91e63", "engine": ""};
 
 // === State ===
 let DATA = null;
@@ -415,7 +422,7 @@ let openGroups = new Set();
 
 // === Data Loading ===
 async function loadData() {
-  const resp = await fetch('data/passages.json?v=2');
+  const resp = await fetch('data/passages.json?v=' + Date.now());
   DATA = await resp.json();
   if (!DATA.meta.has_zh) {
     document.getElementById('showZh').parentElement.style.display = 'none';
@@ -506,7 +513,7 @@ function passageHtml(p, idx) {
   if (showEn && p.content) {
     if (showZh && p.content_zh) {
       const isLong = p.content.length > 300;
-      textHtml += `<div class="text-en${isLong ? ' collapsed' : ''}">${escHtml(p.content)}</div>`;
+      textHtml += `<div class="text-en${isLong ? ' collapsed' : ''}">${formatText(p.content)}</div>`;
     } else {
       textHtml += `<div class="text">${formatText(p.content)}</div>`;
     }
@@ -534,6 +541,8 @@ function formatText(s) {
   if (!s) return '';
   // Escape HTML, then convert \n to <br> for proper line breaks
   let html = escHtml(s);
+  // Convert ![img](url) to <img> tags (after escHtml so we need to match escaped form)
+  html = html.replace(/!\[img\]\(([^)]+)\)/g, '<img src="$1" class="passage-img" loading="lazy" alt="">');
   // Convert double newlines to paragraph breaks, single to <br>
   html = html.replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>');
   return '<p>' + html + '</p>';
@@ -604,7 +613,7 @@ function renderGroupView(passages) {
   });
 }
 
-// === Grouping ===
+// === Grouping (respects DATA.groups order from JSON) ===
 function groupPassages(passages) {
   const groups = new Map();
   passages.forEach(p => {
@@ -612,12 +621,22 @@ function groupPassages(passages) {
     if (!groups.has(g)) groups.set(g, []);
     groups.get(g).push(p);
   });
-  const sorted = Array.from(groups.entries()).sort((a, b) => {
-    if (a[0] === '（未分類）') return 1;
-    if (b[0] === '（未分類）') return -1;
-    return b[1].length - a[1].length;
-  });
-  return sorted;
+  // Use DATA.groups order if available, otherwise fallback to count-based sort
+  if (DATA.groups && DATA.groups.length > 0) {
+    const ordered = [];
+    const seen = new Set();
+    DATA.groups.forEach(gi => {
+      const key = gi.id || gi.name;
+      if (groups.has(key)) {
+        ordered.push([key, groups.get(key)]);
+        seen.add(key);
+      }
+    });
+    // Append any groups not in DATA.groups
+    groups.forEach((v, k) => { if (!seen.has(k)) ordered.push([k, v]); });
+    return ordered;
+  }
+  return Array.from(groups.entries()).sort((a, b) => b[1].length - a[1].length);
 }
 
 // === All View ===
