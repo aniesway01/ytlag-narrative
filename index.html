@@ -539,12 +539,32 @@ function passageHtml(p, idx) {
 
 function formatText(s) {
   if (!s) return '';
-  // Escape HTML, then convert \n to <br> for proper line breaks
-  let html = escHtml(s);
-  // Convert ![img](url) to <img> tags (after escHtml so we need to match escaped form)
+  // Extract <img> tags before escaping, replace with placeholders
+  const imgs = [];
+  let safe = s.replace(/<img\s[^>]*>/gi, m => {
+    const i = imgs.length;
+    // Ensure class and lazy loading
+    let tag = m;
+    if (!/class=/.test(tag)) tag = tag.replace('<img', '<img class="passage-img"');
+    if (!/loading=/.test(tag)) tag = tag.replace('<img', '<img loading="lazy"');
+    imgs.push(tag);
+    return ' IMG' + i + ' ';
+  });
+  // Escape remaining HTML
+  let html = escHtml(safe);
+  // Restore <img> tags from placeholders
+  html = html.replace(/ IMG(\d+) /g, (_, i) => imgs[+i]);
+  // Convert ![img](url) markdown syntax
   html = html.replace(/!\[img\]\(([^)]+)\)/g, '<img src="$1" class="passage-img" loading="lazy" alt="">');
+  // Convert Twine [img[path]] and [img[path][link]] syntax
+  html = html.replace(/\[img\[([^\]]+?)\](?:\[[^\]]*\])?\]/g, '<img src="$1" class="passage-img" loading="lazy" alt="">');
+  // Convert [image: path] syntax
+  html = html.replace(/\[image:\s*\.?\/?([^\]]+)\]/g, '<img src="$1" class="passage-img" loading="lazy" alt="">');
   // Convert double newlines to paragraph breaks, single to <br>
-  html = html.replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>');
+  html = html.replace(/
+
++/g, '</p><p>').replace(/
+/g, '<br>');
   return '<p>' + html + '</p>';
 }
 
