@@ -6,755 +6,518 @@
 <title>你丟球像個女孩 — 互動敘事地圖</title>
 <style>
 :root {
-  --bg: #0f0f1a;
-  --bg2: #161625;
-  --bg3: #1e1e32;
-  --text: #e8e8f0;
-  --text2: #8888a0;
-  --text3: #555570;
+  --bg: #0c0810;
+  --bg2: #120e16;
+  --bg3: #1c1520;
+  --text: #e8ddf0;
+  --text2: #9080a0;
+  --text3: #584870;
   --accent: #e91e63;
-  --accent2: #533483;
-  --accent-glow: #e91e6322;
-  --border: #2a2a42;
-  --card: #1a1a2e;
-  --card-hover: #1e1e36;
-  --tag-bg: rgba(74,153,153,0.15);
-  --tag-text: #5db8b8;
-  --success: #4ade80;
+  --accent2: #9c27b0;
+  --accent-glow: rgba(233,30,99,0.12);
+  --accent2-glow: rgba(156,39,176,0.12);
+  --border: #241a30;
+  --card: #100c14;
+  --card-hover: #180f1e;
+  --warm: #f59e0b;
+  --tag-char: #f472b6;
+  --tag-loc: #a78bfa;
+  --tag-action: #fb923c;
+  --tag-cond: #6366f1;
+  --tag-default: rgba(232,221,240,0.08);
   --radius: 10px;
+  --shadow: 0 2px 16px rgba(0,0,0,0.5);
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: 'Segoe UI', system-ui, -apple-system, 'Noto Sans TC', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.7;
-  height: 100vh;
-  overflow: hidden;
-}
+body { font-family: 'Segoe UI', system-ui, -apple-system, 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; height: 100vh; overflow: hidden; }
 .app { display: flex; height: 100vh; flex-direction: column; }
 
-/* === Game Header Banner === */
-.game-banner {
-  background: linear-gradient(135deg, var(--accent2) 0%, var(--bg3) 50%, var(--bg2) 100%);
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
-.game-banner::before {
-  content: '';
-  position: absolute;
-  top: 0; right: 0;
-  width: 300px; height: 100%;
-  background: radial-gradient(ellipse at 80% 50%, var(--accent-glow), transparent 70%);
-  pointer-events: none;
-}
-.game-banner h1 {
-  font-size: 26px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 1px;
-  margin-bottom: 2px;
-}
-.game-banner .subtitle {
-  font-size: 13px;
-  color: rgba(255,255,255,0.45);
-  font-style: italic;
-  margin-bottom: 8px;
-}
-.game-banner .banner-stats {
-  display: flex;
-  gap: 16px;
-  font-size: 12px;
-  color: rgba(255,255,255,0.55);
-}
-.game-banner .banner-stats .stat-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.game-banner .banner-stats b { color: var(--accent); }
-.translation-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 600;
-}
-.translation-badge.full {
-  background: rgba(74,222,128,0.15);
-  color: var(--success);
-}
-.translation-badge.partial {
-  background: rgba(251,191,36,0.15);
-  color: #fbbf24;
-}
+.game-banner { background: linear-gradient(135deg, #0c0508 0%, #1a0818 40%, #200a1a 70%, #0c0810 100%); padding: 20px 24px 16px; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+.game-banner::before { content: ''; position: absolute; top: -60%; right: -5%; width: 420px; height: 420px; background: radial-gradient(circle, rgba(233,30,99,0.06), transparent 60%); pointer-events: none; }
+.game-banner::after { content: ''; position: absolute; bottom: -70%; left: 10%; width: 350px; height: 350px; background: radial-gradient(circle, rgba(156,39,176,0.04), transparent 60%); pointer-events: none; }
+.banner-top { display: flex; align-items: center; gap: 16px; position: relative; z-index: 1; }
+.banner-icon { width: 54px; height: 54px; border-radius: 14px; background: linear-gradient(135deg, #3a1030, #2a1040); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; box-shadow: 0 4px 20px rgba(233,30,99,0.2); border: 1px solid rgba(233,30,99,0.2); }
+.banner-text h1 { font-size: 24px; font-weight: 700; color: #f0ddf0; letter-spacing: 0.5px; text-shadow: 0 0 30px rgba(233,30,99,0.15); }
+.banner-text .subtitle { font-size: 12px; color: rgba(232,221,240,0.4); margin-top: 2px; font-style: italic; }
+.banner-stats { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; font-size: 12px; color: rgba(232,221,240,0.45); position: relative; z-index: 1; }
+.stat-item { display: flex; align-items: center; gap: 4px; }
+.stat-item b { color: var(--accent); }
+.char-avatars { display: flex; gap: 4px; margin-left: auto; position: relative; z-index: 1; flex-wrap: wrap; }
+.char-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; border: 2px solid rgba(232,221,240,0.1); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+.char-avatar:hover { transform: scale(1.2); box-shadow: 0 0 12px rgba(233,30,99,0.3); }
 
-/* === Toolbar === */
-.toolbar {
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.search-box {
-  padding: 6px 14px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  font-size: 13px;
-  width: 220px;
-  flex-shrink: 1;
-  min-width: 140px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-.search-box:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-glow);
-}
+.toolbar { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 8px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.search-wrap { position: relative; flex-shrink: 1; min-width: 140px; }
+.search-wrap::before { content: '\1F50D'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 13px; pointer-events: none; z-index: 1; }
+.search-box { padding: 6px 14px 6px 32px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 13px; width: 240px; transition: border-color 0.2s, box-shadow 0.2s; }
+.search-wrap .search-box { width: 100%; }
+.search-box:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
 .search-box::placeholder { color: var(--text3); }
-.toolbar-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.toggle-row {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  color: var(--text2);
-  cursor: pointer;
-  white-space: nowrap;
-  user-select: none;
-}
-.toggle-row input { accent-color: var(--accent); cursor: pointer; }
+.toolbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.toggle-row { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text2); cursor: pointer; white-space: nowrap; user-select: none; }
+.toggle-row input { accent-color: var(--accent); cursor: pointer; width: 14px; height: 14px; }
 .toggle-row:hover { color: var(--text); }
-.view-toggle { display: flex; gap: 4px; }
-.view-btn {
-  padding: 5px 14px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text2);
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
+.view-toggle { display: flex; gap: 3px; }
+.view-btn { padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-size: 11px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
 .view-btn:hover { background: var(--bg3); color: var(--text); }
-.view-btn.active {
-  background: var(--accent2);
-  color: #fff;
-  border-color: var(--accent2);
-  box-shadow: 0 2px 8px rgba(83,52,131,0.3);
-}
+.view-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 10px rgba(233,30,99,0.3); }
+.filter-row { display: flex; gap: 4px; flex-wrap: wrap; }
+.filter-chip { padding: 3px 10px; border-radius: 14px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-size: 11px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.filter-chip:hover { border-color: var(--text2); color: var(--text); }
+.filter-chip.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
 
-/* === Content Area === */
-.content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px 20px 40px;
-  scroll-behavior: smooth;
-}
+.content { flex: 1; overflow-y: auto; padding: 16px 20px 60px; scroll-behavior: smooth; }
 
-/* === Group Headers === */
-.group-header {
-  width: 100%;
-  background: linear-gradient(135deg, var(--accent2), var(--bg3));
-  padding: 14px 20px;
-  margin: 20px 0 6px 0;
-  border-radius: var(--radius);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  cursor: pointer;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  transition: transform 0.1s;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-}
+.group-header { width: 100%; background: linear-gradient(135deg, var(--bg3), var(--bg2)); padding: 14px 20px; margin: 16px 0 4px 0; border-radius: var(--radius); position: sticky; top: 0; z-index: 10; cursor: pointer; user-select: none; display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); box-shadow: var(--shadow); transition: border-color 0.2s; }
 .group-header:first-child { margin-top: 0; }
-.group-header:active { transform: scale(0.995); }
-.group-arrow {
-  font-size: 12px;
-  color: rgba(255,255,255,0.4);
-  transition: transform 0.2s;
-  flex-shrink: 0;
-}
+.group-header:hover { border-color: var(--accent); }
+.group-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.group-arrow { font-size: 10px; color: var(--text3); transition: transform 0.2s; flex-shrink: 0; }
 .group-arrow.open { transform: rotate(90deg); }
 .group-info { flex: 1; min-width: 0; }
-.group-header h2 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #fff;
-  margin: 0;
-  border: none;
-  padding: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.group-header .group-name-en {
-  font-size: 11px;
-  color: rgba(255,255,255,0.35);
-  font-style: italic;
-  margin-top: 1px;
-}
-.group-header .group-stats {
-  font-size: 12px;
-  color: rgba(255,255,255,0.45);
-  flex-shrink: 0;
-}
+.group-header h2 { font-size: 16px; font-weight: 600; color: #f0ddf0; margin: 0; border: none; padding: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.group-header .group-name-en { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.group-header .group-stats { font-size: 11px; color: var(--text2); flex-shrink: 0; display: flex; align-items: center; gap: 8px; }
 .group-header .group-stats b { color: var(--accent); }
-
-/* === Group Body === */
-.group-body {
-  display: none;
-  padding: 2px 0;
-}
+.group-body { display: none; padding: 2px 0; }
 .group-body.open { display: block; }
 
-/* === Passage Cards === */
-.passage {
-  background: var(--card);
-  padding: 14px 18px;
-  margin: 5px 0;
-  border-radius: 8px;
-  border-left: 3px solid transparent;
-  transition: border-color 0.2s, background 0.15s;
-  position: relative;
-}
-.passage:hover {
-  border-left-color: var(--accent);
-  background: var(--card-hover);
-}
-.passage-header {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-.passage-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--accent);
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.passage .pid {
-  font-size: 10px;
-  color: var(--text3);
-  font-family: 'Consolas', monospace;
-  flex-shrink: 0;
-}
-.passage .pname {
-  font-size: 11px;
-  color: var(--tag-text);
-  margin-bottom: 4px;
-  font-family: monospace;
-}
-.passage .text {
-  font-size: 14.5px;
-  line-height: 1.85;
-  color: var(--text);
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.passage-img {
-  max-width: 100%;
-  max-height: 400px;
-  border-radius: 8px;
-  margin: 8px 0;
-  display: block;
-}
-.passage .text-en {
-  font-size: 12px;
-  color: var(--text2);
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px dashed var(--border);
-  font-style: italic;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  max-height: 150px;
-  overflow: hidden;
-  position: relative;
-}
-.passage .text-en.collapsed::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 40px;
-  background: linear-gradient(transparent, var(--card));
-  pointer-events: none;
-}
-.passage .tag-row { margin-bottom: 6px; }
-.passage .tag {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: var(--tag-bg);
-  color: var(--tag-text);
-  font-size: 11px;
-  margin-right: 4px;
-  margin-bottom: 2px;
-}
-.passage-num {
-  font-size: 10px;
-  color: var(--text3);
-  font-family: monospace;
-  position: absolute;
-  top: 14px;
-  right: 16px;
-}
+.passage { background: var(--card); padding: 14px 18px; margin: 4px 0; border-radius: 8px; border-left: 3px solid transparent; transition: all 0.2s; position: relative; }
+.passage:hover { border-left-color: var(--accent); background: var(--card-hover); }
+.passage-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.passage-title { font-size: 13px; font-weight: 600; color: var(--accent); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.passage .pid { font-size: 10px; color: var(--text3); font-family: 'Consolas', monospace; flex-shrink: 0; }
+.passage .tag-row { margin-bottom: 6px; display: flex; flex-wrap: wrap; gap: 3px; }
+.passage .tag { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 10px; font-weight: 500; }
+.tag-char { background: rgba(244,114,182,0.1); color: var(--tag-char); }
+.tag-loc { background: rgba(167,139,250,0.1); color: var(--tag-loc); }
+.tag-action { background: rgba(251,146,60,0.1); color: var(--tag-action); }
+.tag-cond { background: rgba(99,102,241,0.1); color: var(--tag-cond); }
+.tag-default { background: var(--tag-default); color: var(--text2); }
+.char-pills { margin-bottom: 6px; display: flex; gap: 4px; flex-wrap: wrap; }
+.char-pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; cursor: pointer; transition: transform 0.15s; }
+.char-pill:hover { transform: scale(1.05); }
+.passage .text { font-size: 14px; line-height: 1.85; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+.passage .text p { margin-bottom: 0.5em; }
+.passage .text-en { font-size: 12px; color: var(--text2); margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-style: italic; line-height: 1.6; white-space: pre-wrap; max-height: 120px; overflow: hidden; position: relative; }
+.passage .text-en.collapsed::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40px; background: linear-gradient(transparent, var(--card)); pointer-events: none; }
+.passage .choices-row { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 4px; }
+.choice-btn { padding: 3px 10px; border-radius: 14px; background: var(--accent-glow); border: 1px solid rgba(233,30,99,0.25); color: var(--accent); font-size: 11px; cursor: default; }
+.passage-img { max-width: 100%; border-radius: 8px; margin: 10px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
 
-/* === Empty / Loading States === */
-.loading {
-  text-align: center;
-  padding: 80px 20px;
-  color: var(--text2);
-}
-.loading .spinner {
-  display: inline-block;
-  width: 36px; height: 36px;
-  border: 3px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin-bottom: 16px;
-}
+.char-section { margin: 6px 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.char-section-header { padding: 14px 18px; background: var(--bg2); display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; transition: background 0.15s; }
+.char-section-header:hover { background: var(--bg3); }
+.char-section-avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.char-section-info { flex: 1; min-width: 0; }
+.char-section-info h3 { font-size: 16px; font-weight: 600; color: #f0ddf0; }
+.char-section-info .meta { font-size: 12px; color: var(--text2); }
+.char-section-body { display: none; }
+.char-section-body.open { display: block; padding: 4px 8px 8px; }
+
+.loading { text-align: center; padding: 80px 20px; color: var(--text2); }
+.loading .spinner { display: inline-block; width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text2);
-  font-size: 14px;
-}
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text2); font-size: 14px; }
 
-/* === Scrollbar === */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent2); }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-/* === Mobile === */
+.kb-hint { position: fixed; bottom: 12px; right: 16px; font-size: 10px; color: var(--text3); pointer-events: none; z-index: 100; }
+.kb-hint kbd { padding: 1px 4px; border-radius: 3px; background: var(--bg2); border: 1px solid var(--border); font-family: inherit; }
+
+/* Small groups merged into one "Misc" mega-header */
+.mini-group-label { display: inline-block; padding: 1px 6px; border-radius: 8px; font-size: 10px; background: rgba(232,221,240,0.06); color: var(--text2); margin-right: 4px; margin-bottom: 2px; }
+
 @media (max-width: 768px) {
   .game-banner { padding: 16px; }
-  .game-banner h1 { font-size: 22px; }
-  .content { padding: 12px; }
+  .banner-top h1 { font-size: 20px; }
+  .char-avatars { display: none; }
+  .content { padding: 10px 12px 40px; }
   .passage .text { font-size: 15px; line-height: 1.9; }
   .toolbar { padding: 6px 10px; gap: 6px; }
+  .search-wrap { width: 100%; }
   .search-box { width: 100%; }
   .toolbar-right { margin-left: 0; width: 100%; flex-wrap: wrap; justify-content: center; }
   .view-toggle { width: 100%; justify-content: center; }
-  .group-header { padding: 12px 14px; }
-  .group-header h2 { font-size: 16px; }
+  .filter-row { width: 100%; justify-content: center; }
+  .group-header { padding: 10px 14px; }
+  .group-header h2 { font-size: 15px; }
+  .kb-hint { display: none; }
+  .passage-img { max-width: 100%; }
 }
 </style>
 </head>
 <body>
 <div class="app">
-  <!-- Game Banner -->
   <div class="game-banner">
-    <h1 id="gameTitle">載入中...</h1>
-    <div class="subtitle" id="gameSubtitle"></div>
+    <div class="banner-top">
+      <div class="banner-icon">&#x1F3C8;</div>
+      <div class="banner-text">
+        <h1 id="gameTitle">&#20320;&#19999;&#29699;&#20687;&#20491;&#22899;&#23401;</h1>
+        <div class="subtitle" id="gameSubtitle">You Throw Like A Girl &#x2014; Twine &#20114;&#21205;&#25944;&#20107; | &#26657;&#22290;&#35722;&#36523;</div>
+      </div>
+      <div class="char-avatars" id="charAvatars"></div>
+    </div>
     <div class="banner-stats" id="bannerStats"></div>
   </div>
 
-  <!-- Toolbar -->
   <div class="toolbar">
-    <input type="text" class="search-box" id="searchBox" placeholder="搜尋段落內容...">
+    <div class="search-wrap">
+      <input type="text" class="search-box" id="searchBox" placeholder="&#25628;&#23563;&#27573;&#33853;&#12289;&#35282;&#33394;&#12289;&#22580;&#26223;...">
+    </div>
     <div class="toolbar-right">
-      <label class="toggle-row">
-        <input type="checkbox" id="showZh" checked>
-        <span>中文</span>
-      </label>
-      <label class="toggle-row">
-        <input type="checkbox" id="showEn">
-        <span>英文原文</span>
-      </label>
-      <label class="toggle-row">
-        <input type="checkbox" id="showName">
-        <span>段落 ID</span>
-      </label>
+      <label class="toggle-row"><input type="checkbox" id="showZh" checked><span>&#20013;&#25991;</span></label>
+      <label class="toggle-row"><input type="checkbox" id="showEn"><span>&#33521;&#25991;</span></label>
+      <label class="toggle-row"><input type="checkbox" id="showChoices" checked><span>&#36984;&#38917;</span></label>
       <div class="view-toggle">
-        <button class="view-btn active" data-view="group" id="viewGroup">按分類</button>
-        <button class="view-btn" data-view="all" id="viewAll">全部段落</button>
+        <button class="view-btn active" data-view="narrative" id="viewNarrative">&#25944;&#20107;</button>
+        <button class="view-btn" data-view="scene" id="viewScene">&#22580;&#26223;</button>
+        <button class="view-btn" data-view="character" id="viewChar">&#35282;&#33394;</button>
       </div>
     </div>
   </div>
 
-  <!-- Content -->
+  <div id="filterBar" class="toolbar" style="display:none; padding:4px 16px; border-top:none;">
+    <div class="filter-row" id="filterRow"></div>
+  </div>
+
   <div class="content" id="content">
-    <div class="loading">
-      <div class="spinner"></div>
-      <div>載入敘事數據中...</div>
-    </div>
+    <div class="loading"><div class="spinner"></div><div>&#36617;&#20837;&#25944;&#20107;&#25976;&#25818;&#20013;...</div></div>
   </div>
 </div>
+<div class="kb-hint"><kbd>/</kbd> &#25628;&#23563; &nbsp; <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> &#20999;&#25563;&#35222;&#22294; &nbsp; <kbd>Esc</kbd> &#28165;&#38500;</div>
 
 <script>
-// === Config (injected by build script) ===
-const GAME_CONFIG = {"title": "You Throw Like A Girl", "title_zh": "你丟球像個女孩", "color_accent": "#e91e63", "engine": ""};
+const CHUNK_SIZE = 60;
+const MIN_GROUP_SIZE = 5; // Groups smaller than this get merged into "Other"
 
-// === State ===
-let DATA = null;
-let searchQuery = '';
-let showZh = true;
-let showEn = false;
-let showName = false;
-let currentView = 'group';
-let openGroups = new Set();
+const CHAR_COLORS = {
+  'Emily': '#ec4899', 'Rachel': '#a855f7', 'Coach': '#3b82f6',
+  'Witch': '#8b5cf6', 'QB': '#ef4444', 'Girlfriend': '#f472b6',
+  'Therapist': '#14b8a6', 'Mom': '#f59e0b', 'Dad': '#6366f1'
+};
+const CHAR_LIST = ['Emily','Rachel','Coach','Witch','QB','Girlfriend','Therapist','Mom','Dad'];
 
-// === Data Loading ===
+const GROUP_ICONS = {
+  'RealityChange': ['#a855f7', '\u{2728}'], 'Witch': ['#8b5cf6', '\u{1F9D9}'],
+  'QB': ['#ef4444', '\u{1F3C8}'], 'Girlfriend': ['#f472b6', '\u{1F496}'],
+  'Cheerleading': ['#ec4899', '\u{1F483}'], 'Trans': ['#c084fc', '\u{1F300}'],
+  'Lunch': ['#f59e0b', '\u{1F354}'], 'Therapist': ['#14b8a6', '\u{1F4AC}'],
+  'Team': ['#3b82f6', '\u{1F46F}'], 'Game': ['#ef4444', '\u{1F3C6}'],
+  'WorkOut': ['#22c55e', '\u{1F4AA}'], 'Halloween': ['#f97316', '\u{1F383}'],
+  'ParentVisit': ['#f59e0b', '\u{1F46A}'], 'Gym': ['#10b981', '\u{1F3CB}'],
+  'Panty Raid': ['#ec4899', '\u{1F6A8}'], 'Morning': ['#fbbf24', '\u{1F305}'],
+  'Practice': ['#3b82f6', '\u{1F3C3}'], 'AfterSchool': ['#a78bfa', '\u{1F3EB}'],
+  'Epilogue RealityChange': ['#c084fc', '\u{1F30C}'],
+  '__other__': ['#64748b', '\u{1F4C1}']
+};
+
+let DATA = null, searchQuery = '', showZh = true, showEn = false, showChoices = true;
+let currentView = 'narrative', openSections = new Set(), charFilter = null;
+
 async function loadData() {
-  const resp = await fetch('data/passages.json?v=' + Date.now());
-  DATA = await resp.json();
-  if (!DATA.meta.has_zh) {
-    document.getElementById('showZh').parentElement.style.display = 'none';
-    showZh = false;
-    showEn = true;
-    document.getElementById('showEn').checked = true;
-  }
-  init();
+  try {
+    const resp = await fetch('data/passages.json?v=' + Date.now());
+    DATA = await resp.json();
+    if (!DATA.meta.has_zh) { document.getElementById('showZh').parentElement.style.display = 'none'; showZh = false; showEn = true; document.getElementById('showEn').checked = true; }
+    detectCharacters();
+    mergeSmallGroups();
+    init();
+  } catch(e) { document.getElementById('content').innerHTML = '<div class="empty-state">\u8F09\u5165\u5931\u6557: ' + e.message + '</div>'; }
 }
 
-// === Banner ===
+function mergeSmallGroups() {
+  // Merge groups with fewer than MIN_GROUP_SIZE passages into "__other__"
+  const smallGroups = new Set();
+  (DATA.groups || []).forEach(g => {
+    if ((g.count || 0) < MIN_GROUP_SIZE) smallGroups.add(g.name || g.id);
+  });
+  if (smallGroups.size > 0) {
+    let otherCount = 0;
+    DATA.passages.forEach(p => {
+      if (smallGroups.has(p.group)) {
+        p._originalGroup = p.group;
+        p.group = '__other__';
+        otherCount++;
+      }
+    });
+    // Update groups list
+    DATA.groups = DATA.groups.filter(g => !smallGroups.has(g.name || g.id));
+    if (otherCount > 0) {
+      DATA.groups.push({ name: '__other__', name_zh: '\u5176\u4ED6 (' + smallGroups.size + ' \u5C0F\u7D44)', count: otherCount });
+    }
+  }
+}
+
+function detectCharacters() {
+  const charCounts = {};
+  DATA.passages.forEach(p => {
+    const text = (p.content || '') + ' ' + (p.name || '');
+    CHAR_LIST.forEach(name => {
+      if (text.includes(name)) { charCounts[name] = (charCounts[name] || 0) + 1; }
+    });
+    if (!p.characters || p.characters.length === 0) {
+      const found = [];
+      CHAR_LIST.forEach(name => { if (text.includes(name)) found.push(name); });
+      if (found.length > 0) p.characters = found;
+    }
+  });
+  DATA.meta.characters = Object.entries(charCounts).sort((a,b) => b[1] - a[1]).map(e => e[0]);
+}
+
 function renderBanner() {
   const m = DATA.meta;
-  const titleZh = m.title_zh || m.title || '';
-  const titleEn = m.title || '';
-  document.getElementById('gameTitle').textContent = titleZh;
-  document.getElementById('gameSubtitle').textContent = titleZh !== titleEn ? titleEn : '';
-  document.title = titleZh + ' — 互動敘事地圖';
-
   const total = m.total || DATA.passages.length;
+  const chars = m.characters || [];
+  const groups = (DATA.groups || []).length;
   const zhCount = m.translated_count || DATA.passages.filter(p => p.content_zh).length;
-  const groupCount = (DATA.groups || []).length;
   const pct = total > 0 ? Math.round(zhCount / total * 100) : 0;
 
-  let badgeClass = pct >= 95 ? 'full' : 'partial';
-  let badgeText = pct >= 95 ? '✓ 翻譯完成' : `${pct}% 已翻譯`;
+  document.getElementById('bannerStats').innerHTML =
+    '<span class="stat-item"><b>' + groups + '</b> \u5206\u985E</span>' +
+    '<span class="stat-item"><b>' + total.toLocaleString() + '</b> \u6BB5\u843D</span>' +
+    '<span class="stat-item"><b>' + chars.length + '</b> \u89D2\u8272</span>' +
+    '<span class="stat-item" style="color:' + (pct>=95?'#22c55e':'#f59e0b') + '">' + pct + '% \u5DF2\u7FFB\u8B6F</span>';
 
-  document.getElementById('bannerStats').innerHTML = `
-    <span class="stat-item"><b>${groupCount}</b> 分類</span>
-    <span class="stat-item"><b>${total}</b> 段落</span>
-    <span class="translation-badge ${badgeClass}">${badgeText}</span>
-  `;
+  document.getElementById('charAvatars').innerHTML = chars.slice(0, 10).map(c => {
+    const color = CHAR_COLORS[c] || '#64748b';
+    return '<div class="char-avatar" style="background:' + color + '" title="' + c + '" onclick="filterByChar(\'' + c + '\')">' + c[0] + '</div>';
+  }).join('');
 }
 
-// === Filtering ===
 function getFiltered() {
   let passages = DATA.passages;
+  if (charFilter) passages = passages.filter(p => (p.characters || []).includes(charFilter));
   if (searchQuery) {
     const q = searchQuery.toLowerCase();
     passages = passages.filter(p =>
-      (p.content_zh || '').toLowerCase().includes(q) ||
-      (p.content || '').toLowerCase().includes(q) ||
-      (p.name || '').toLowerCase().includes(q) ||
-      (p.group || '').toLowerCase().includes(q) ||
-      (p.group_zh || '').includes(q)
+      (p.content_zh || '').toLowerCase().includes(q) || (p.content || '').toLowerCase().includes(q) ||
+      (p.name || '').toLowerCase().includes(q) || (p.group || '').toLowerCase().includes(q) ||
+      (p._originalGroup || '').toLowerCase().includes(q) ||
+      (p.characters || []).some(c => c.toLowerCase().includes(q))
     );
   }
   return passages;
 }
 
-// === Auto Title ===
-function getPassageTitle(p) {
-  // If passage has a meaningful title (not just an ID like "g7" or "passage_12")
-  const name = p.name || '';
-  if (name && !/^(g\d|passage_|p\d|#|\d+$)/.test(name) && name.length > 2 && name.length < 80) {
-    return name;
-  }
-  // Extract first sentence from Chinese content
-  if (p.content_zh) {
-    const first = p.content_zh.split(/[。！？\n]/)[0];
-    if (first && first.length > 4) {
-      return first.length > 60 ? first.substring(0, 57) + '...' : first;
-    }
-  }
-  // Extract from English content
-  if (p.content) {
-    const first = p.content.split(/[.!?\n]/)[0];
-    if (first && first.length > 4) {
-      return first.length > 60 ? first.substring(0, 57) + '...' : first;
-    }
-  }
-  return name || `段落 ${p.pid}`;
+function filterByChar(name) { charFilter = charFilter === name ? null : name; updateFilterBar(); resetAndRender(); }
+
+function updateFilterBar() {
+  const bar = document.getElementById('filterBar');
+  const row = document.getElementById('filterRow');
+  if (currentView === 'character' || charFilter) {
+    bar.style.display = 'flex';
+    const chars = DATA.meta.characters || [];
+    row.innerHTML = chars.map(c => {
+      const color = CHAR_COLORS[c] || '#64748b';
+      const active = charFilter === c ? ' active' : '';
+      return '<button class="filter-chip' + active + '" style="' + (charFilter===c ? 'background:'+color+'22;border-color:'+color+';color:'+color : '') + '" onclick="filterByChar(\'' + c + '\')">' + c + '</button>';
+    }).join('') + (charFilter ? '<button class="filter-chip" style="color:var(--warm)" onclick="charFilter=null;updateFilterBar();resetAndRender();">\u6E05\u9664</button>' : '');
+  } else { bar.style.display = 'none'; }
 }
 
-// === Passage HTML ===
-function passageHtml(p, idx) {
-  const title = getPassageTitle(p);
-  const pid = p.pid != null ? `<span class="pid">#${p.pid}</span>` : '';
-  const pname = showName && p.name ? `<div class="pname">${escHtml(p.name)}</div>` : '';
-  const tags = (p.tags && p.tags.length > 0)
-    ? `<div class="tag-row">${p.tags.map(t => `<span class="tag">${escHtml(t)}</span>`).join('')}</div>`
-    : '';
-
-  let textHtml = '';
-  if (showZh && p.content_zh) {
-    textHtml += `<div class="text">${formatText(p.content_zh)}</div>`;
-  }
-  if (showEn && p.content) {
-    if (showZh && p.content_zh) {
-      const isLong = p.content.length > 300;
-      textHtml += `<div class="text-en${isLong ? ' collapsed' : ''}">${formatText(p.content)}</div>`;
-    } else {
-      textHtml += `<div class="text">${formatText(p.content)}</div>`;
-    }
-  }
-  if (!textHtml) {
-    if (p.content_zh) {
-      textHtml = `<div class="text">${formatText(p.content_zh)}</div>`;
-    } else if (p.content) {
-      textHtml = `<div class="text">${formatText(p.content)}</div>`;
-    } else {
-      textHtml = `<div class="text" style="color:var(--text3)">（無內容）</div>`;
-    }
-  }
-
-  return `<div class="passage">
-    <div class="passage-header">
-      <span class="passage-title">${escHtml(title)}</span>
-      ${pid}
-    </div>
-    ${pname}${tags}${textHtml}
-  </div>`;
+function getPassageTitle(p) {
+  const name = p.name || '';
+  if (name && !/^(g\d|passage_|p\d|#|\d+$)/.test(name) && name.length > 2 && name.length < 80) return name;
+  if (p.content_zh) { const first = p.content_zh.replace(/\[.*?\]/g, '').replace(/<<[^>]*?>>/g, '').split(/[\u3002\uFF01\uFF1F\n]/)[0].trim(); if (first.length > 4) return first.length > 50 ? first.substring(0, 47) + '...' : first; }
+  if (p.content) { const first = p.content.replace(/\[.*?\]/g, '').replace(/<<[^>]*?>>/g, '').replace(/=[^=]*?=/g, '').split(/[.!?\n]/)[0].trim(); if (first.length > 4) return first.length > 50 ? first.substring(0, 47) + '...' : first; }
+  return name || 'Passage ' + p.pid;
 }
 
 function formatText(s) {
   if (!s) return '';
-  // Extract <img> tags before escaping, replace with placeholders
+  let text = s;
+  // Extract [img[path]] before escaping
   const imgs = [];
-  let safe = s.replace(/<img\s[^>]*>/gi, m => {
-    const i = imgs.length;
-    // Ensure class and lazy loading
-    let tag = m;
-    if (!/class=/.test(tag)) tag = tag.replace('<img', '<img class="passage-img"');
-    if (!/loading=/.test(tag)) tag = tag.replace('<img', '<img loading="lazy"');
-    imgs.push(tag);
-    return ' IMG' + i + ' ';
-  });
-  // Escape remaining HTML
-  let html = escHtml(safe);
-  // Restore <img> tags from placeholders
-  html = html.replace(/ IMG(\d+) /g, (_, i) => imgs[+i]);
-  // Convert ![img](url) markdown syntax
-  html = html.replace(/!\[img\]\(([^)]+)\)/g, '<img src="$1" class="passage-img" loading="lazy" alt="">');
-  // Convert Twine [img[path]] and [img[path][link]] syntax
-  html = html.replace(/\[img\[([^\]]+?)\](?:\[[^\]]*\])?\]/g, '<img src="$1" class="passage-img" loading="lazy" alt="">');
-  // Convert [image: path] syntax
-  html = html.replace(/\[image:\s*\.?\/?([^\]]+)\]/g, '<img src="$1" class="passage-img" loading="lazy" alt="">');
-  // Convert double newlines to paragraph breaks, single to <br>
-  html = html.replace(/
-
-+/g, '</p><p>').replace(/
-/g, '<br>');
+  text = text.replace(/\[img\[([^\]]+?)\](?:\[[^\]]*\])?\]/g, function(m, src) { const i = imgs.length; imgs.push('<img src="' + escAttr(src) + '" class="passage-img" loading="lazy" alt="">'); return ' __IMG' + i + '__ '; });
+  text = text.replace(/<img\s[^>]*>/gi, function(m) { const i = imgs.length; imgs.push(m); return ' __IMG' + i + '__ '; });
+  // Strip macros
+  text = text.replace(/<<[^>]*?>>/g, '');
+  text = text.replace(/\[\[([^\]|]*?)(?:\|[^\]]*?)?\]\]/g, '');
+  text = text.replace(/==[^=]*?==/g, '');
+  // Strip =14>>text=7>>text patterns (YTLAG conditional display)
+  text = text.replace(/=\d+>>/g, '');
+  text = text.replace(/\[OR\]/g, '\n');
+  text = text.replace(/\n{3,}/g, '\n\n').trim();
+  let html = escHtml(text);
+  html = html.replace(/ __IMG(\d+)__ /g, function(_, i) { return imgs[+i] || ''; });
+  html = html.replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>');
   return '<p>' + html + '</p>';
 }
 
-function escHtml(s) {
-  if (!s) return '';
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+function escHtml(s) { if (!s) return ''; return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function escAttr(s) { if (!s) return ''; return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+function passageHtml(p) {
+  const title = getPassageTitle(p);
+  const pid = p.pid != null ? '<span class="pid">#' + p.pid + '</span>' : '';
+  const tags = (p.tags && p.tags.length > 0) ? '<div class="tag-row">' + p.tags.map(t => '<span class="tag tag-default">' + escHtml(t) + '</span>').join('') + '</div>' : '';
+  // Show original group as mini-label for merged passages
+  const miniGroup = p._originalGroup ? '<span class="mini-group-label">' + escHtml(p._originalGroup) + '</span>' : '';
+  const chars = (p.characters && p.characters.length > 0) ? '<div class="char-pills">' + p.characters.map(c => { const color = CHAR_COLORS[c] || '#64748b'; return '<span class="char-pill" style="background:' + color + '18;color:' + color + ';border:1px solid ' + color + '33" onclick="filterByChar(\'' + c + '\')">' + c + '</span>'; }).join('') + '</div>' : '';
+
+  const TEXT_LIMIT = 4000;
+  let textHtml = '';
+  if (showZh && p.content_zh) { const t = p.content_zh.length > TEXT_LIMIT ? p.content_zh.substring(0, TEXT_LIMIT) : p.content_zh; textHtml += '<div class="text">' + formatText(t) + '</div>' + (p.content_zh.length > TEXT_LIMIT ? '<div style="color:var(--tag-cond);font-size:11px">... \u5DF2\u622A\u65B7</div>' : ''); }
+  if (showEn && p.content) { const t = p.content.length > TEXT_LIMIT ? p.content.substring(0, TEXT_LIMIT) : p.content; if (showZh && p.content_zh) { textHtml += '<div class="text-en' + (t.length > 300 ? ' collapsed' : '') + '">' + formatText(t) + '</div>'; } else { textHtml += '<div class="text">' + formatText(t) + '</div>'; } }
+  if (!textHtml) { textHtml = p.content_zh ? '<div class="text">' + formatText(p.content_zh) + '</div>' : p.content ? '<div class="text">' + formatText(p.content) + '</div>' : '<div class="text" style="color:var(--text3)">(\u7121\u5167\u5BB9)</div>'; }
+
+  let choicesHtml = '';
+  if (showChoices) { const re = /\[\[([^\]|]+?)(?:\|([^\]]*?))?\]\]/g; let cm, choices = []; while ((cm = re.exec(p.content || '')) !== null) { const t = cm[1].trim(); if (t.length > 0 && t.length < 100 && !/^\$/.test(t)) choices.push({text:t,target:cm[2]?cm[2].trim():t}); } if (choices.length > 0) { choicesHtml = '<div class="choices-row">' + choices.slice(0,15).map(c => '<span class="choice-btn" title="-> ' + escHtml(c.target) + '">' + escHtml(c.text) + '</span>').join('') + '</div>'; } }
+
+  return '<div class="passage"><div class="passage-header"><span class="passage-title">' + escHtml(title) + '</span>' + pid + '</div>' + miniGroup + tags + chars + textHtml + choicesHtml + '</div>';
 }
 
-// === Group View ===
-function renderGroupView(passages) {
-  const content = document.getElementById('content');
-  content.innerHTML = '';
-  const groups = groupPassages(passages);
-
-  if (groups.length === 0) {
-    content.innerHTML = '<div class="empty-state">未找到匹配的段落</div>';
-    return;
+function renderChunked(container, passages, startIdx) {
+  const end = Math.min(startIdx + CHUNK_SIZE, passages.length);
+  let html = ''; for (let i = startIdx; i < end; i++) html += passageHtml(passages[i]);
+  container.insertAdjacentHTML('beforeend', html);
+  if (end < passages.length) {
+    const sentinel = document.createElement('div'); sentinel.className = 'loading'; sentinel.style.padding = '16px';
+    sentinel.innerHTML = '<div style="font-size:11px;color:var(--text3)">\u8F09\u5165\u66F4\u591A (' + end + '/' + passages.length + ')...</div>';
+    container.appendChild(sentinel);
+    const obs = new IntersectionObserver(entries => { if (entries[0].isIntersecting) { obs.disconnect(); sentinel.remove(); renderChunked(container, passages, end); } });
+    obs.observe(sentinel);
   }
-
-  let total = 0;
-  groups.forEach(([gName, gPassages]) => {
-    total += gPassages.length;
-    const isOpen = openGroups.has(gName);
-
-    // Find group info
-    const gInfo = (DATA.groups || []).find(g => g.id === gName);
-    const displayName = gInfo ? (gInfo.name_zh || gInfo.name || gName) : gName;
-    const displayNameEn = gInfo && gInfo.name_zh && gInfo.name !== gInfo.name_zh ? gInfo.name : '';
-
-    const header = document.createElement('div');
-    header.className = 'group-header';
-    header.innerHTML = `
-      <span class="group-arrow${isOpen ? ' open' : ''}">▶</span>
-      <div class="group-info">
-        <h2>${escHtml(displayName)}</h2>
-        ${displayNameEn ? `<div class="group-name-en">${escHtml(displayNameEn)}</div>` : ''}
-      </div>
-      <div class="group-stats"><b>${gPassages.length}</b> 段落</div>
-    `;
-
-    const body = document.createElement('div');
-    body.className = 'group-body' + (isOpen ? ' open' : '');
-
-    header.addEventListener('click', () => {
-      const nowOpen = body.classList.toggle('open');
-      header.querySelector('.group-arrow').classList.toggle('open', nowOpen);
-      if (nowOpen) {
-        openGroups.add(gName);
-        if (!body.dataset.rendered) {
-          renderPassageChunked(body, gPassages, 0);
-          body.dataset.rendered = '1';
-        }
-      } else {
-        openGroups.delete(gName);
-      }
-    });
-
-    // Auto-render if was open
-    if (isOpen && !body.dataset.rendered) {
-      renderPassageChunked(body, gPassages, 0);
-      body.dataset.rendered = '1';
-    }
-
-    content.appendChild(header);
-    content.appendChild(body);
-  });
 }
 
-// === Grouping (respects DATA.groups order from JSON) ===
 function groupPassages(passages) {
   const groups = new Map();
-  passages.forEach(p => {
-    const g = p.group || '（未分類）';
-    if (!groups.has(g)) groups.set(g, []);
-    groups.get(g).push(p);
-  });
-  // Use DATA.groups order if available, otherwise fallback to count-based sort
+  passages.forEach(p => { const g = p.group || '(\u672A\u5206\u985E)'; if (!groups.has(g)) groups.set(g, []); groups.get(g).push(p); });
   if (DATA.groups && DATA.groups.length > 0) {
-    const ordered = [];
-    const seen = new Set();
-    DATA.groups.forEach(gi => {
-      const key = gi.id || gi.name;
-      if (groups.has(key)) {
-        ordered.push([key, groups.get(key)]);
-        seen.add(key);
-      }
+    const ordered = []; const seen = new Set();
+    // Sort data groups by count desc, but put __other__ last
+    const sortedGroups = [...DATA.groups].sort((a,b) => {
+      if (a.name === '__other__') return 1;
+      if (b.name === '__other__') return -1;
+      return (b.count||0) - (a.count||0);
     });
-    // Append any groups not in DATA.groups
+    sortedGroups.forEach(gi => { const key = gi.name || gi.id; if (groups.has(key)) { ordered.push([key, groups.get(key)]); seen.add(key); } });
     groups.forEach((v, k) => { if (!seen.has(k)) ordered.push([k, v]); });
     return ordered;
   }
   return Array.from(groups.entries()).sort((a, b) => b[1].length - a[1].length);
 }
 
-// === All View ===
-function renderAllView(passages) {
+function renderNarrativeView(passages) {
   const content = document.getElementById('content');
   content.innerHTML = '';
-  if (passages.length === 0) {
-    content.innerHTML = '<div class="empty-state">未找到匹配的段落</div>';
-    return;
-  }
-  renderPassageChunked(content, passages, 0);
+  const groups = groupPassages(passages);
+  if (groups.length === 0) { content.innerHTML = '<div class="empty-state">\u672A\u627E\u5230\u5339\u914D\u7684\u6BB5\u843D</div>'; return; }
+
+  groups.forEach(([gName, gPassages]) => {
+    const isOpen = openSections.has('g:' + gName);
+    const iconInfo = GROUP_ICONS[gName] || ['#64748b', gName.substring(0,2).toUpperCase()];
+    const gInfo = (DATA.groups || []).find(g => (g.name || g.id) === gName);
+    const nameZh = gInfo ? (gInfo.name_zh || gInfo.name || gName) : gName;
+    const nameEn = gName !== '__other__' && nameZh !== gName ? gName : '';
+    const charCount = new Set(gPassages.flatMap(p => p.characters || [])).size;
+
+    const header = document.createElement('div');
+    header.className = 'group-header';
+    header.innerHTML =
+      '<div class="group-icon" style="background:' + iconInfo[0] + '22;color:' + iconInfo[0] + ';font-size:18px">' + iconInfo[1] + '</div>' +
+      '<span class="group-arrow' + (isOpen ? ' open' : '') + '">&#9654;</span>' +
+      '<div class="group-info"><h2>' + escHtml(nameZh) + '</h2>' + (nameEn ? '<div class="group-name-en">' + escHtml(nameEn) + '</div>' : '') + '</div>' +
+      '<div class="group-stats">' + (charCount > 0 ? '<span>' + charCount + ' \u89D2\u8272</span>' : '') + '<span><b>' + gPassages.length + '</b> \u6BB5\u843D</span></div>';
+
+    const body = document.createElement('div');
+    body.className = 'group-body' + (isOpen ? ' open' : '');
+    header.addEventListener('click', () => { const nowOpen = body.classList.toggle('open'); header.querySelector('.group-arrow').classList.toggle('open', nowOpen); if (nowOpen) { openSections.add('g:' + gName); if (!body.dataset.rendered) { renderChunked(body, gPassages, 0); body.dataset.rendered = '1'; } } else { openSections.delete('g:' + gName); } });
+    if (isOpen && !body.dataset.rendered) { renderChunked(body, gPassages, 0); body.dataset.rendered = '1'; }
+    content.appendChild(header); content.appendChild(body);
+  });
 }
 
-// === Chunked Rendering ===
-function renderPassageChunked(container, passages, startIdx) {
-  const CHUNK = 80;
-  const end = Math.min(startIdx + CHUNK, passages.length);
-  let html = '';
-  for (let i = startIdx; i < end; i++) {
-    html += passageHtml(passages[i], i);
-  }
-  container.insertAdjacentHTML('beforeend', html);
+function renderSceneView(passages) {
+  const content = document.getElementById('content');
+  content.innerHTML = '';
+  if (passages.length === 0) { content.innerHTML = '<div class="empty-state">\u672A\u627E\u5230\u5339\u914D\u7684\u6BB5\u843D</div>'; return; }
+  const groups = groupPassages(passages);
+  groups.forEach(([gName, gPassages]) => {
+    const iconInfo = GROUP_ICONS[gName] || ['#64748b', gName.substring(0,2).toUpperCase()];
+    const gInfo = (DATA.groups || []).find(g => (g.name || g.id) === gName);
+    const nameZh = gInfo ? (gInfo.name_zh || gName) : gName;
+    const isOpen = openSections.has('sv:' + gName);
+    const charSubs = new Map();
+    gPassages.forEach(p => { const key = (p.characters && p.characters.length > 0) ? p.characters[0] : '(\u4E00\u822C)'; if (!charSubs.has(key)) charSubs.set(key, []); charSubs.get(key).push(p); });
 
-  if (end < passages.length) {
-    const sentinel = document.createElement('div');
-    sentinel.className = 'loading';
-    sentinel.style.padding = '20px';
-    sentinel.innerHTML = `<div style="font-size:12px;color:var(--text3)">載入更多 (${end}/${passages.length})...</div>`;
-    container.appendChild(sentinel);
+    const header = document.createElement('div');
+    header.className = 'group-header';
+    header.innerHTML = '<div class="group-icon" style="background:' + iconInfo[0] + '22;color:' + iconInfo[0] + ';font-size:18px">' + iconInfo[1] + '</div><span class="group-arrow' + (isOpen ? ' open' : '') + '">&#9654;</span><div class="group-info"><h2>' + escHtml(nameZh) + '</h2><div class="group-name-en">' + escHtml(gName) + ' &middot; ' + charSubs.size + ' \u5B50\u5834\u666F</div></div><div class="group-stats"><b>' + gPassages.length + '</b> \u6BB5\u843D</div>';
+    const body = document.createElement('div'); body.className = 'group-body' + (isOpen ? ' open' : '');
+    header.addEventListener('click', () => { const nowOpen = body.classList.toggle('open'); header.querySelector('.group-arrow').classList.toggle('open', nowOpen); if (nowOpen) { openSections.add('sv:' + gName); if (!body.dataset.rendered) { renderSceneSubs(body, charSubs, gName); body.dataset.rendered = '1'; } } else { openSections.delete('sv:' + gName); } });
+    if (isOpen && !body.dataset.rendered) { renderSceneSubs(body, charSubs, gName); body.dataset.rendered = '1'; }
+    content.appendChild(header); content.appendChild(body);
+  });
+}
 
-    const obs = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        obs.disconnect();
-        sentinel.remove();
-        renderPassageChunked(container, passages, end);
-      }
-    });
-    obs.observe(sentinel);
+function renderSceneSubs(container, charSubs, groupName) {
+  Array.from(charSubs.entries()).sort((a, b) => { if (a[0]==='(\u4E00\u822C)') return 1; if (b[0]==='(\u4E00\u822C)') return -1; return b[1].length-a[1].length; }).forEach(([cn, sp]) => {
+    const sk = 'ss:'+groupName+':'+cn, isOpen = openSections.has(sk), color = CHAR_COLORS[cn]||'#64748b', isG = cn==='(\u4E00\u822C)';
+    const sub = document.createElement('div'); sub.className = 'char-section'; sub.style.margin = '4px 0';
+    sub.innerHTML = '<div class="char-section-header" style="padding:10px 14px"><div class="char-section-avatar" style="background:'+color+';width:32px;height:32px;font-size:13px">'+(isG?'?':cn[0])+'</div><div class="char-section-info"><h3 style="font-size:14px">'+(isG?'\u4E00\u822C':escHtml(cn))+'</h3><div class="meta">'+sp.length+' \u6BB5\u843D</div></div><span class="group-arrow'+(isOpen?' open':'')+'">&#9654;</span></div>';
+    const sb = document.createElement('div'); sb.className = 'char-section-body'+(isOpen?' open':'');
+    sub.querySelector('.char-section-header').addEventListener('click', () => { const no = sb.classList.toggle('open'); sub.querySelector('.group-arrow').classList.toggle('open',no); if(no){openSections.add(sk);if(!sb.dataset.rendered){renderChunked(sb,sp,0);sb.dataset.rendered='1';}}else{openSections.delete(sk);} });
+    if(isOpen&&!sb.dataset.rendered){renderChunked(sb,sp,0);sb.dataset.rendered='1';}
+    sub.appendChild(sb); container.appendChild(sub);
+  });
+}
+
+function renderCharacterView(passages) {
+  const content = document.getElementById('content'); content.innerHTML = '';
+  const charMap = new Map();
+  passages.forEach(p => { (p.characters||[]).forEach(c => { if (!charMap.has(c)) charMap.set(c,[]); charMap.get(c).push(p); }); });
+  const noChar = passages.filter(p => !(p.characters && p.characters.length > 0));
+  if (charMap.size === 0 && noChar.length === 0) { content.innerHTML = '<div class="empty-state">\u672A\u627E\u5230\u5339\u914D\u7684\u6BB5\u843D</div>'; return; }
+
+  Array.from(charMap.entries()).sort((a,b)=>b[1].length-a[1].length).forEach(([cn,cp])=>{
+    if(charFilter&&charFilter!==cn) return;
+    const isOpen=openSections.has('c:'+cn),color=CHAR_COLORS[cn]||'#64748b';
+    const section=document.createElement('div');section.className='char-section';
+    section.innerHTML='<div class="char-section-header"><div class="char-section-avatar" style="background:'+color+'">'+cn[0]+'</div><div class="char-section-info"><h3>'+escHtml(cn)+'</h3><div class="meta">'+cp.length+' \u6BB5\u843D</div></div><span class="group-arrow'+(isOpen?' open':'')+'">&#9654;</span></div>';
+    const body=document.createElement('div');body.className='char-section-body'+(isOpen?' open':'');
+    section.querySelector('.char-section-header').addEventListener('click',()=>{const no=body.classList.toggle('open');section.querySelector('.group-arrow').classList.toggle('open',no);if(no){openSections.add('c:'+cn);if(!body.dataset.rendered){renderChunked(body,cp,0);body.dataset.rendered='1';}}else{openSections.delete('c:'+cn);}});
+    if(isOpen&&!body.dataset.rendered){renderChunked(body,cp,0);body.dataset.rendered='1';}
+    section.appendChild(body);content.appendChild(section);
+  });
+  if(noChar.length>0&&!charFilter){
+    const isOpen=openSections.has('c:__none');
+    const section=document.createElement('div');section.className='char-section';
+    section.innerHTML='<div class="char-section-header"><div class="char-section-avatar" style="background:var(--text3)">?</div><div class="char-section-info"><h3>\u7121\u7279\u5B9A\u89D2\u8272</h3><div class="meta">'+noChar.length+' \u6BB5\u843D</div></div><span class="group-arrow'+(isOpen?' open':'')+'">&#9654;</span></div>';
+    const body=document.createElement('div');body.className='char-section-body'+(isOpen?' open':'');
+    section.querySelector('.char-section-header').addEventListener('click',()=>{const no=body.classList.toggle('open');section.querySelector('.group-arrow').classList.toggle('open',no);if(no){openSections.add('c:__none');if(!body.dataset.rendered){renderChunked(body,noChar,0);body.dataset.rendered='1';}}else{openSections.delete('c:__none');}});
+    if(isOpen&&!body.dataset.rendered){renderChunked(body,noChar,0);body.dataset.rendered='1';}
+    section.appendChild(body);content.appendChild(section);
   }
 }
 
-// === Render ===
 function resetAndRender() {
-  const passages = getFiltered();
-  if (currentView === 'group') {
-    renderGroupView(passages);
-  } else {
-    renderAllView(passages);
-  }
+  document.querySelectorAll('[data-rendered]').forEach(el=>{if(!el.classList.contains('open'))el.dataset.rendered='';});
+  switch(currentView){case 'narrative':renderNarrativeView(getFiltered());break;case 'scene':renderSceneView(getFiltered());break;case 'character':renderCharacterView(getFiltered());break;}
 }
 
 function setActiveView(view) {
-  currentView = view;
-  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(view === 'group' ? 'viewGroup' : 'viewAll').classList.add('active');
-  resetAndRender();
+  currentView=view;openSections.clear();
+  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(view==='narrative'?'viewNarrative':view==='scene'?'viewScene':'viewChar').classList.add('active');
+  updateFilterBar();resetAndRender();
 }
 
-// === Init ===
 function init() {
-  renderBanner();
-
-  let searchTimeout;
-  document.getElementById('searchBox').addEventListener('input', (e) => {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-      searchQuery = e.target.value.trim();
-      resetAndRender();
-    }, 300);
-  });
-
-  document.getElementById('showZh').addEventListener('change', (e) => {
-    showZh = e.target.checked;
-    clearRenderedCache();
-    resetAndRender();
-  });
-  document.getElementById('showEn').addEventListener('change', (e) => {
-    showEn = e.target.checked;
-    clearRenderedCache();
-    resetAndRender();
-  });
-  document.getElementById('showName').addEventListener('change', (e) => {
-    showName = e.target.checked;
-    clearRenderedCache();
-    resetAndRender();
-  });
-
-  document.getElementById('viewGroup').addEventListener('click', () => setActiveView('group'));
-  document.getElementById('viewAll').addEventListener('click', () => setActiveView('all'));
-
+  renderBanner();updateFilterBar();
+  let st;document.getElementById('searchBox').addEventListener('input',e=>{clearTimeout(st);st=setTimeout(()=>{searchQuery=e.target.value.trim();openSections.clear();resetAndRender();},300);});
+  document.getElementById('showZh').addEventListener('change',e=>{showZh=e.target.checked;openSections.clear();resetAndRender();});
+  document.getElementById('showEn').addEventListener('change',e=>{showEn=e.target.checked;openSections.clear();resetAndRender();});
+  document.getElementById('showChoices').addEventListener('change',e=>{showChoices=e.target.checked;openSections.clear();resetAndRender();});
+  document.getElementById('viewNarrative').addEventListener('click',()=>setActiveView('narrative'));
+  document.getElementById('viewScene').addEventListener('click',()=>setActiveView('scene'));
+  document.getElementById('viewChar').addEventListener('click',()=>setActiveView('character'));
+  document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key==='/'){e.preventDefault();document.getElementById('searchBox').focus();}if(e.key==='1')setActiveView('narrative');if(e.key==='2')setActiveView('scene');if(e.key==='3')setActiveView('character');if(e.key==='Escape'){document.getElementById('searchBox').blur();if(charFilter){charFilter=null;updateFilterBar();resetAndRender();}}});
   resetAndRender();
-}
-
-function clearRenderedCache() {
-  openGroups.clear();
-  document.querySelectorAll('.group-body').forEach(div => {
-    div.dataset.rendered = '';
-  });
 }
 
 loadData();
