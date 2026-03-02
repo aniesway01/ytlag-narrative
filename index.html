@@ -3,138 +3,487 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>你丟球像個女孩 — 互動敘事地圖</title>
+<title>You Throw Like A Girl — 互動敘事地圖</title>
 <style>
 :root {
-  --bg: #0c0810;
-  --bg2: #120e16;
-  --bg3: #1c1520;
-  --text: #e8ddf0;
-  --text2: #9080a0;
-  --text3: #584870;
+  --bg: #0d0f14;
+  --bg2: #141822;
+  --bg3: #1a1f2e;
+  --text: #e2e8f0;
+  --text2: #8b97a8;
+  --text3: #4a5568;
   --accent: #e91e63;
-  --accent2: #9c27b0;
-  --accent-glow: rgba(233,30,99,0.12);
-  --accent2-glow: rgba(156,39,176,0.12);
-  --border: #241a30;
-  --card: #100c14;
-  --card-hover: #180f1e;
+  --accent2: #ff6090;
+  --accent-glow: rgba(233,30,99,0.15);
+  --accent2-glow: rgba(255,96,144,0.15);
+  --border: #1e2535;
+  --card: #12161f;
+  --card-hover: #171c28;
   --warm: #f59e0b;
-  --tag-char: #f472b6;
-  --tag-loc: #a78bfa;
-  --tag-action: #fb923c;
-  --tag-cond: #6366f1;
-  --tag-default: rgba(232,221,240,0.08);
+  --pink: #ec4899;
+  --tag-char: #38bdf8;
+  --tag-loc: #4ade80;
+  --tag-action: #f97316;
+  --tag-cond: #a78bfa;
   --radius: 10px;
-  --shadow: 0 2px 16px rgba(0,0,0,0.5);
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', system-ui, -apple-system, 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; height: 100vh; overflow: hidden; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, 'Noto Sans TC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  height: 100vh;
+  overflow: hidden;
+}
 .app { display: flex; height: 100vh; flex-direction: column; }
 
-.game-banner { background: linear-gradient(135deg, #0c0508 0%, #1a0818 40%, #200a1a 70%, #0c0810 100%); padding: 20px 24px 16px; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
-.game-banner::before { content: ''; position: absolute; top: -60%; right: -5%; width: 420px; height: 420px; background: radial-gradient(circle, rgba(233,30,99,0.06), transparent 60%); pointer-events: none; }
-.game-banner::after { content: ''; position: absolute; bottom: -70%; left: 10%; width: 350px; height: 350px; background: radial-gradient(circle, rgba(156,39,176,0.04), transparent 60%); pointer-events: none; }
+/* === Game Banner === */
+.game-banner {
+  background: linear-gradient(135deg, #1a0a1e 0%, #2d1035 40%, #1a0a2e 100%);
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.game-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -10%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(233,30,99,0.1), transparent 60%);
+  pointer-events: none;
+}
+.game-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -50%; left: 10%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,96,144,0.06), transparent 60%);
+  pointer-events: none;
+}
 .banner-top { display: flex; align-items: center; gap: 16px; position: relative; z-index: 1; }
-.banner-icon { width: 54px; height: 54px; border-radius: 14px; background: linear-gradient(135deg, #3a1030, #2a1040); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; box-shadow: 0 4px 20px rgba(233,30,99,0.2); border: 1px solid rgba(233,30,99,0.2); }
-.banner-text h1 { font-size: 24px; font-weight: 700; color: #f0ddf0; letter-spacing: 0.5px; text-shadow: 0 0 30px rgba(233,30,99,0.15); }
-.banner-text .subtitle { font-size: 12px; color: rgba(232,221,240,0.4); margin-top: 2px; font-style: italic; }
-.banner-stats { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; font-size: 12px; color: rgba(232,221,240,0.45); position: relative; z-index: 1; }
+.banner-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 700; color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(233,30,99,0.3);
+}
+.banner-text h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+.banner-text .subtitle {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  margin-top: 2px;
+}
+.banner-stats {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  margin-top: 12px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  position: relative; z-index: 1;
+}
 .stat-item { display: flex; align-items: center; gap: 4px; }
 .stat-item b { color: var(--accent); }
-.char-avatars { display: flex; gap: 4px; margin-left: auto; position: relative; z-index: 1; flex-wrap: wrap; }
-.char-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; border: 2px solid rgba(232,221,240,0.1); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
-.char-avatar:hover { transform: scale(1.2); box-shadow: 0 0 12px rgba(233,30,99,0.3); }
+.banner-preview {
+  display: flex; gap: 6px; margin-left: auto;
+  position: relative; z-index: 1;
+  align-items: center;
+}
+.banner-preview img {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(233,30,99,0.3);
+  transition: transform 0.2s;
+}
+.banner-preview img:hover { transform: scale(1.2); }
 
-.toolbar { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 8px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.search-wrap { position: relative; flex-shrink: 1; min-width: 140px; }
-.search-wrap::before { content: '\1F50D'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 13px; pointer-events: none; z-index: 1; }
-.search-box { padding: 6px 14px 6px 32px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 13px; width: 240px; transition: border-color 0.2s, box-shadow 0.2s; }
-.search-wrap .search-box { width: 100%; }
-.search-box:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-.search-box::placeholder { color: var(--text3); }
-.toolbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-.toggle-row { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text2); cursor: pointer; white-space: nowrap; user-select: none; }
+/* === Toolbar === */
+.toolbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.search-wrap {
+  position: relative;
+  flex-shrink: 1;
+  min-width: 140px;
+}
+.search-wrap::before {
+  content: '\1F50D';
+  position: absolute;
+  left: 10px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  pointer-events: none;
+  z-index: 1;
+}
+.search-box {
+  padding: 6px 14px 6px 32px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  width: 240px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-wrap .search-box { width: 100%; padding-left: 32px; }
+.search-box:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.toolbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text2);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
 .toggle-row input { accent-color: var(--accent); cursor: pointer; width: 14px; height: 14px; }
 .toggle-row:hover { color: var(--text); }
 .view-toggle { display: flex; gap: 3px; }
-.view-btn { padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-size: 11px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.view-btn {
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
 .view-btn:hover { background: var(--bg3); color: var(--text); }
-.view-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 10px rgba(233,30,99,0.3); }
-.filter-row { display: flex; gap: 4px; flex-wrap: wrap; }
-.filter-chip { padding: 3px 10px; border-radius: 14px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-size: 11px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
-.filter-chip:hover { border-color: var(--text2); color: var(--text); }
-.filter-chip.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
+.view-btn.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px rgba(233,30,99,0.3);
+}
 
-.content { flex: 1; overflow-y: auto; padding: 16px 20px 60px; scroll-behavior: smooth; }
+/* === Group Filter Bar === */
+.group-filter-bar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 6px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+.group-filter-bar::-webkit-scrollbar { height: 3px; }
+.group-filter-bar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.group-search-mini {
+  padding: 4px 10px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 11px;
+  width: 120px;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+.group-search-mini:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.group-chip {
+  padding: 3px 10px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.group-chip:hover { border-color: var(--text2); color: var(--text); }
+.group-chip.active {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.group-chip .chip-count {
+  font-size: 9px;
+  opacity: 0.6;
+  margin-left: 3px;
+}
 
-.group-header { width: 100%; background: linear-gradient(135deg, var(--bg3), var(--bg2)); padding: 14px 20px; margin: 16px 0 4px 0; border-radius: var(--radius); position: sticky; top: 0; z-index: 10; cursor: pointer; user-select: none; display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); box-shadow: var(--shadow); transition: border-color 0.2s; }
+/* === Content === */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px 60px;
+  scroll-behavior: smooth;
+}
+
+/* === Group Headers === */
+.group-header {
+  width: 100%;
+  background: linear-gradient(135deg, var(--bg3), var(--bg2));
+  padding: 14px 20px;
+  margin: 16px 0 4px 0;
+  border-radius: var(--radius);
+  position: sticky;
+  top: 0; z-index: 10;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: border-color 0.2s;
+}
 .group-header:first-child { margin-top: 0; }
 .group-header:hover { border-color: var(--accent); }
-.group-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-.group-arrow { font-size: 10px; color: var(--text3); transition: transform 0.2s; flex-shrink: 0; }
+.group-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+  flex-shrink: 0;
+}
+.group-arrow {
+  font-size: 10px;
+  color: var(--text3);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
 .group-arrow.open { transform: rotate(90deg); }
 .group-info { flex: 1; min-width: 0; }
-.group-header h2 { font-size: 16px; font-weight: 600; color: #f0ddf0; margin: 0; border: none; padding: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.group-header .group-name-en { font-size: 11px; color: var(--text3); margin-top: 1px; }
-.group-header .group-stats { font-size: 11px; color: var(--text2); flex-shrink: 0; display: flex; align-items: center; gap: 8px; }
+.group-header h2 {
+  font-size: 16px; font-weight: 600; color: #fff;
+  margin: 0; border: none; padding: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.group-header .group-name-en {
+  font-size: 11px; color: var(--text3); margin-top: 1px;
+}
+.group-header .group-stats {
+  font-size: 11px; color: var(--text2); flex-shrink: 0;
+  display: flex; align-items: center; gap: 8px;
+}
 .group-header .group-stats b { color: var(--accent); }
 .group-body { display: none; padding: 2px 0; }
 .group-body.open { display: block; }
 
-.passage { background: var(--card); padding: 14px 18px; margin: 4px 0; border-radius: 8px; border-left: 3px solid transparent; transition: all 0.2s; position: relative; }
-.passage:hover { border-left-color: var(--accent); background: var(--card-hover); }
-.passage-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-.passage-title { font-size: 13px; font-weight: 600; color: var(--accent); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.passage .pid { font-size: 10px; color: var(--text3); font-family: 'Consolas', monospace; flex-shrink: 0; }
+/* === Passage Cards === */
+.passage {
+  background: var(--card);
+  padding: 14px 18px;
+  margin: 4px 0;
+  border-radius: 8px;
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+}
+.passage:hover {
+  border-left-color: var(--accent);
+  background: var(--card-hover);
+}
+.passage-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.passage-title {
+  font-size: 13px; font-weight: 600;
+  color: var(--accent);
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.passage .pid {
+  font-size: 10px; color: var(--text3);
+  font-family: 'Consolas', monospace; flex-shrink: 0;
+}
 .passage .tag-row { margin-bottom: 6px; display: flex; flex-wrap: wrap; gap: 3px; }
-.passage .tag { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 10px; font-weight: 500; }
-.tag-char { background: rgba(244,114,182,0.1); color: var(--tag-char); }
-.tag-loc { background: rgba(167,139,250,0.1); color: var(--tag-loc); }
-.tag-action { background: rgba(251,146,60,0.1); color: var(--tag-action); }
-.tag-cond { background: rgba(99,102,241,0.1); color: var(--tag-cond); }
-.tag-default { background: var(--tag-default); color: var(--text2); }
-.char-pills { margin-bottom: 6px; display: flex; gap: 4px; flex-wrap: wrap; }
-.char-pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; cursor: pointer; transition: transform 0.15s; }
-.char-pill:hover { transform: scale(1.05); }
-.passage .text { font-size: 14px; line-height: 1.85; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+.passage .tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 500;
+}
+.tag-char { background: rgba(56,189,248,0.12); color: var(--tag-char); }
+.tag-loc { background: rgba(74,222,128,0.12); color: var(--tag-loc); }
+.tag-action { background: rgba(249,115,22,0.12); color: var(--tag-action); }
+.tag-cond { background: rgba(167,139,250,0.12); color: var(--tag-cond); }
+.tag-default { background: rgba(255,255,255,0.06); color: var(--text2); }
+.passage .text {
+  font-size: 14px; line-height: 1.85;
+  color: var(--text);
+  white-space: pre-wrap; word-break: break-word;
+}
 .passage .text p { margin-bottom: 0.5em; }
-.passage .text-en { font-size: 12px; color: var(--text2); margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-style: italic; line-height: 1.6; white-space: pre-wrap; max-height: 120px; overflow: hidden; position: relative; }
-.passage .text-en.collapsed::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40px; background: linear-gradient(transparent, var(--card)); pointer-events: none; }
-.passage .choices-row { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 4px; }
-.choice-btn { padding: 3px 10px; border-radius: 14px; background: var(--accent-glow); border: 1px solid rgba(233,30,99,0.25); color: var(--accent); font-size: 11px; cursor: default; }
-.passage-img { max-width: 100%; border-radius: 8px; margin: 10px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+.passage .text-en {
+  font-size: 12px; color: var(--text2);
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px dashed var(--border);
+  font-style: italic; line-height: 1.6;
+  white-space: pre-wrap;
+  max-height: 120px; overflow: hidden;
+  position: relative;
+}
+.passage .text-en.collapsed::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 40px;
+  background: linear-gradient(transparent, var(--card));
+  pointer-events: none;
+}
+.passage .choices-row {
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid var(--border);
+  display: flex; flex-wrap: wrap; gap: 4px;
+}
+.choice-btn {
+  padding: 3px 10px;
+  border-radius: 14px;
+  background: var(--accent-glow);
+  border: 1px solid rgba(233,30,99,0.25);
+  color: var(--accent);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.choice-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.passage-img {
+  max-width: 100%;
+  max-height: 400px;
+  border-radius: 8px;
+  margin: 8px 0;
+  cursor: pointer;
+  display: block;
+}
 
-.char-section { margin: 6px 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-.char-section-header { padding: 14px 18px; background: var(--bg2); display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; transition: background 0.15s; }
+/* === Character View === */
+.char-section {
+  margin: 12px 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.char-section-header {
+  padding: 14px 18px;
+  background: var(--bg2);
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; user-select: none;
+  transition: background 0.15s;
+}
 .char-section-header:hover { background: var(--bg3); }
-.char-section-avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.char-section-avatar {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; color: #fff;
+  flex-shrink: 0;
+}
 .char-section-info { flex: 1; min-width: 0; }
-.char-section-info h3 { font-size: 16px; font-weight: 600; color: #f0ddf0; }
-.char-section-info .meta { font-size: 12px; color: var(--text2); }
+.char-section-info h3 {
+  font-size: 16px; font-weight: 600; color: #fff;
+}
+.char-section-info .meta {
+  font-size: 12px; color: var(--text2);
+}
 .char-section-body { display: none; }
 .char-section-body.open { display: block; padding: 4px 8px 8px; }
 
-.loading { text-align: center; padding: 80px 20px; color: var(--text2); }
-.loading .spinner { display: inline-block; width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.empty-state { text-align: center; padding: 60px 20px; color: var(--text2); font-size: 14px; }
+/* === Lightbox === */
+.lightbox-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.lightbox-overlay.open { display: flex; }
+.lightbox-overlay img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 8px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
 
+/* === States === */
+.loading {
+  text-align: center; padding: 80px 20px; color: var(--text2);
+}
+.loading .spinner {
+  display: inline-block;
+  width: 36px; height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--text2); font-size: 14px;
+}
+
+/* === Scrollbar === */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-.kb-hint { position: fixed; bottom: 12px; right: 16px; font-size: 10px; color: var(--text3); pointer-events: none; z-index: 100; }
-.kb-hint kbd { padding: 1px 4px; border-radius: 3px; background: var(--bg2); border: 1px solid var(--border); font-family: inherit; }
+/* === Keyboard shortcut hint === */
+.kb-hint {
+  position: fixed; bottom: 12px; right: 16px;
+  font-size: 10px; color: var(--text3);
+  pointer-events: none; z-index: 100;
+}
+.kb-hint kbd {
+  padding: 1px 4px; border-radius: 3px;
+  background: var(--bg2); border: 1px solid var(--border);
+  font-family: inherit;
+}
 
-/* Small groups merged into one "Misc" mega-header */
-.mini-group-label { display: inline-block; padding: 1px 6px; border-radius: 8px; font-size: 10px; background: rgba(232,221,240,0.06); color: var(--text2); margin-right: 4px; margin-bottom: 2px; }
-
+/* === Mobile === */
 @media (max-width: 768px) {
   .game-banner { padding: 16px; }
   .banner-top h1 { font-size: 20px; }
-  .char-avatars { display: none; }
+  .banner-preview { display: none; }
   .content { padding: 10px 12px 40px; }
   .passage .text { font-size: 15px; line-height: 1.9; }
   .toolbar { padding: 6px 10px; gap: 6px; }
@@ -142,11 +491,10 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, 'Noto Sans TC', sans-s
   .search-box { width: 100%; }
   .toolbar-right { margin-left: 0; width: 100%; flex-wrap: wrap; justify-content: center; }
   .view-toggle { width: 100%; justify-content: center; }
-  .filter-row { width: 100%; justify-content: center; }
+  .group-filter-bar { padding: 4px 10px; }
   .group-header { padding: 10px 14px; }
   .group-header h2 { font-size: 15px; }
   .kb-hint { display: none; }
-  .passage-img { max-width: 100%; }
 }
 </style>
 </head>
@@ -154,369 +502,816 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, 'Noto Sans TC', sans-s
 <div class="app">
   <div class="game-banner">
     <div class="banner-top">
-      <div class="banner-icon">&#x1F3C8;</div>
+      <div class="banner-icon">TF</div>
       <div class="banner-text">
-        <h1 id="gameTitle">&#20320;&#19999;&#29699;&#20687;&#20491;&#22899;&#23401;</h1>
-        <div class="subtitle" id="gameSubtitle">You Throw Like A Girl &#x2014; Twine &#20114;&#21205;&#25944;&#20107; | &#26657;&#22290;&#35722;&#36523;</div>
+        <h1 id="gameTitle">You Throw Like A Girl</h1>
+        <div class="subtitle" id="gameSubtitle">Twine 互動敘事 | 變身 / TF 主題</div>
       </div>
-      <div class="char-avatars" id="charAvatars"></div>
+      <div class="banner-preview" id="bannerPreview"></div>
     </div>
     <div class="banner-stats" id="bannerStats"></div>
   </div>
 
   <div class="toolbar">
     <div class="search-wrap">
-      <input type="text" class="search-box" id="searchBox" placeholder="&#25628;&#23563;&#27573;&#33853;&#12289;&#35282;&#33394;&#12289;&#22580;&#26223;...">
+      <input type="text" class="search-box" id="searchBox" placeholder="搜尋段落、分組、場景...">
     </div>
     <div class="toolbar-right">
-      <label class="toggle-row"><input type="checkbox" id="showZh" checked><span>&#20013;&#25991;</span></label>
-      <label class="toggle-row"><input type="checkbox" id="showEn"><span>&#33521;&#25991;</span></label>
-      <label class="toggle-row"><input type="checkbox" id="showChoices" checked><span>&#36984;&#38917;</span></label>
+      <label class="toggle-row">
+        <input type="checkbox" id="showZh" checked>
+        <span>中文</span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" id="showEn">
+        <span>英文</span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" id="showChoices" checked>
+        <span>選項</span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" id="showCond">
+        <span>條件</span>
+      </label>
       <div class="view-toggle">
-        <button class="view-btn active" data-view="narrative" id="viewNarrative">&#25944;&#20107;</button>
-        <button class="view-btn" data-view="scene" id="viewScene">&#22580;&#26223;</button>
-        <button class="view-btn" data-view="character" id="viewChar">&#35282;&#33394;</button>
+        <button class="view-btn active" data-view="narrative" id="viewNarrative">敘事</button>
+        <button class="view-btn" data-view="scene" id="viewScene">場景</button>
+        <button class="view-btn" data-view="character" id="viewChar">角色</button>
       </div>
     </div>
   </div>
 
-  <div id="filterBar" class="toolbar" style="display:none; padding:4px 16px; border-top:none;">
-    <div class="filter-row" id="filterRow"></div>
+  <div class="group-filter-bar" id="groupFilterBar">
+    <input type="text" class="group-search-mini" id="groupSearch" placeholder="篩選分組...">
   </div>
 
   <div class="content" id="content">
-    <div class="loading"><div class="spinner"></div><div>&#36617;&#20837;&#25944;&#20107;&#25976;&#25818;&#20013;...</div></div>
+    <div class="loading">
+      <div class="spinner"></div>
+      <div>載入敘事數據中...</div>
+    </div>
   </div>
 </div>
-<div class="kb-hint"><kbd>/</kbd> &#25628;&#23563; &nbsp; <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> &#20999;&#25563;&#35222;&#22294; &nbsp; <kbd>Esc</kbd> &#28165;&#38500;</div>
+
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<div class="kb-hint">
+  <kbd>/</kbd> 搜尋 &nbsp; <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> 切換視圖 &nbsp; <kbd>Esc</kbd> 清除
+</div>
 
 <script>
+// ============================================================
+// YTLAG - You Throw Like A Girl - Enhanced Narrative Viewer
+// ============================================================
+
 const CHUNK_SIZE = 60;
-const MIN_GROUP_SIZE = 5; // Groups smaller than this get merged into "Other"
+const GROUP_COLORS = {};
+const COLOR_PALETTE = [
+  '#e91e63','#9c27b0','#673ab7','#3f51b5','#2196f3','#00bcd4',
+  '#009688','#4caf50','#8bc34a','#ff9800','#ff5722','#795548',
+  '#607d8b','#f44336','#e040fb','#7c4dff','#448aff','#18ffff',
+  '#69f0ae','#ffd740','#ff6e40','#8d6e63'
+];
 
-const CHAR_COLORS = {
-  'Emily': '#ec4899', 'Rachel': '#a855f7', 'Coach': '#3b82f6',
-  'Witch': '#8b5cf6', 'QB': '#ef4444', 'Girlfriend': '#f472b6',
-  'Therapist': '#14b8a6', 'Mom': '#f59e0b', 'Dad': '#6366f1'
-};
-const CHAR_LIST = ['Emily','Rachel','Coach','Witch','QB','Girlfriend','Therapist','Mom','Dad'];
+const PREVIEW_IMAGES = [
+  'images/side_characters/cheerleader_left_5-5.png',
+  'images/side_characters/cheerleader_right_5-5.png',
+  'images/side_characters/coach.png',
+  'images/side_characters/girlfriend.png',
+  'images/side_characters/witch.png'
+];
 
-const GROUP_ICONS = {
-  'RealityChange': ['#a855f7', '\u{2728}'], 'Witch': ['#8b5cf6', '\u{1F9D9}'],
-  'QB': ['#ef4444', '\u{1F3C8}'], 'Girlfriend': ['#f472b6', '\u{1F496}'],
-  'Cheerleading': ['#ec4899', '\u{1F483}'], 'Trans': ['#c084fc', '\u{1F300}'],
-  'Lunch': ['#f59e0b', '\u{1F354}'], 'Therapist': ['#14b8a6', '\u{1F4AC}'],
-  'Team': ['#3b82f6', '\u{1F46F}'], 'Game': ['#ef4444', '\u{1F3C6}'],
-  'WorkOut': ['#22c55e', '\u{1F4AA}'], 'Halloween': ['#f97316', '\u{1F383}'],
-  'ParentVisit': ['#f59e0b', '\u{1F46A}'], 'Gym': ['#10b981', '\u{1F3CB}'],
-  'Panty Raid': ['#ec4899', '\u{1F6A8}'], 'Morning': ['#fbbf24', '\u{1F305}'],
-  'Practice': ['#3b82f6', '\u{1F3C3}'], 'AfterSchool': ['#a78bfa', '\u{1F3EB}'],
-  'Epilogue RealityChange': ['#c084fc', '\u{1F30C}'],
-  '__other__': ['#64748b', '\u{1F4C1}']
-};
+let DATA = null;
+let searchQuery = '';
+let showZh = true;
+let showEn = false;
+let showChoices = true;
+let showCond = false;
+let currentView = 'narrative';
+let openSections = new Set();
+let groupFilter = null;
+let groupSearchQuery = '';
 
-let DATA = null, searchQuery = '', showZh = true, showEn = false, showChoices = true;
-let currentView = 'narrative', openSections = new Set(), charFilter = null;
-
+// === Data Loading ===
 async function loadData() {
   try {
     const resp = await fetch('data/passages.json?v=' + Date.now());
     DATA = await resp.json();
-    if (!DATA.meta.has_zh) { document.getElementById('showZh').parentElement.style.display = 'none'; showZh = false; showEn = true; document.getElementById('showEn').checked = true; }
-    detectCharacters();
-    mergeSmallGroups();
-    init();
-  } catch(e) { document.getElementById('content').innerHTML = '<div class="empty-state">\u8F09\u5165\u5931\u6557: ' + e.message + '</div>'; }
-}
-
-function mergeSmallGroups() {
-  // Merge groups with fewer than MIN_GROUP_SIZE passages into "__other__"
-  const smallGroups = new Set();
-  (DATA.groups || []).forEach(g => {
-    if ((g.count || 0) < MIN_GROUP_SIZE) smallGroups.add(g.name || g.id);
-  });
-  if (smallGroups.size > 0) {
-    let otherCount = 0;
-    DATA.passages.forEach(p => {
-      if (smallGroups.has(p.group)) {
-        p._originalGroup = p.group;
-        p.group = '__other__';
-        otherCount++;
-      }
-    });
-    // Update groups list
-    DATA.groups = DATA.groups.filter(g => !smallGroups.has(g.name || g.id));
-    if (otherCount > 0) {
-      DATA.groups.push({ name: '__other__', name_zh: '\u5176\u4ED6 (' + smallGroups.size + ' \u5C0F\u7D44)', count: otherCount });
+    if (!DATA.meta.has_zh) {
+      document.getElementById('showZh').parentElement.style.display = 'none';
+      showZh = false;
+      showEn = true;
+      document.getElementById('showEn').checked = true;
     }
+    init();
+  } catch(e) {
+    document.getElementById('content').innerHTML =
+      '<div class="empty-state">載入失敗: ' + e.message + '</div>';
   }
 }
 
-function detectCharacters() {
-  const charCounts = {};
-  DATA.passages.forEach(p => {
-    const text = (p.content || '') + ' ' + (p.name || '');
-    CHAR_LIST.forEach(name => {
-      if (text.includes(name)) { charCounts[name] = (charCounts[name] || 0) + 1; }
-    });
-    if (!p.characters || p.characters.length === 0) {
-      const found = [];
-      CHAR_LIST.forEach(name => { if (text.includes(name)) found.push(name); });
-      if (found.length > 0) p.characters = found;
-    }
+// === Assign colors to groups ===
+function assignGroupColors() {
+  (DATA.groups || []).forEach((g, i) => {
+    GROUP_COLORS[g.id || g.name] = COLOR_PALETTE[i % COLOR_PALETTE.length];
   });
-  DATA.meta.characters = Object.entries(charCounts).sort((a,b) => b[1] - a[1]).map(e => e[0]);
 }
 
+// === Banner ===
 function renderBanner() {
   const m = DATA.meta;
   const total = m.total || DATA.passages.length;
-  const chars = m.characters || [];
   const groups = (DATA.groups || []).length;
   const zhCount = m.translated_count || DATA.passages.filter(p => p.content_zh).length;
   const pct = total > 0 ? Math.round(zhCount / total * 100) : 0;
+  const imgCount = DATA.passages.filter(p => (p.content||'').includes('[img[')).length;
 
   document.getElementById('bannerStats').innerHTML =
-    '<span class="stat-item"><b>' + groups + '</b> \u5206\u985E</span>' +
-    '<span class="stat-item"><b>' + total.toLocaleString() + '</b> \u6BB5\u843D</span>' +
-    '<span class="stat-item"><b>' + chars.length + '</b> \u89D2\u8272</span>' +
-    '<span class="stat-item" style="color:' + (pct>=95?'#22c55e':'#f59e0b') + '">' + pct + '% \u5DF2\u7FFB\u8B6F</span>';
+    `<span class="stat-item"><b>${groups}</b> 分組</span>` +
+    `<span class="stat-item"><b>${total.toLocaleString()}</b> 段落</span>` +
+    `<span class="stat-item"><b>${imgCount}</b> 含圖片</span>` +
+    `<span class="stat-item"><b>1,217</b> 素材圖片</span>` +
+    `<span class="stat-item" style="color:${pct>=95?'#4ade80':'#fbbf24'}">${pct}% 已翻譯</span>`;
 
-  document.getElementById('charAvatars').innerHTML = chars.slice(0, 10).map(c => {
-    const color = CHAR_COLORS[c] || '#64748b';
-    return '<div class="char-avatar" style="background:' + color + '" title="' + c + '" onclick="filterByChar(\'' + c + '\')">' + c[0] + '</div>';
-  }).join('');
+  const preview = document.getElementById('bannerPreview');
+  preview.innerHTML = PREVIEW_IMAGES.map(src =>
+    `<img src="${src}" loading="lazy" onclick="event.stopPropagation();openLightbox('${src}')" title="角色預覽">`
+  ).join('');
 }
 
+// === Group Filter Bar ===
+function renderGroupFilterBar() {
+  const bar = document.getElementById('groupFilterBar');
+  const groups = DATA.groups || [];
+  const existingChips = bar.querySelectorAll('.group-chip');
+  existingChips.forEach(c => c.remove());
+
+  const filtered = groupSearchQuery
+    ? groups.filter(g => {
+        const q = groupSearchQuery.toLowerCase();
+        return (g.name||'').toLowerCase().includes(q) || (g.name_zh||'').toLowerCase().includes(q);
+      })
+    : groups.sort((a,b) => b.count - a.count).slice(0, 50);
+
+  filtered.forEach(g => {
+    const key = g.id || g.name;
+    const chip = document.createElement('button');
+    chip.className = 'group-chip' + (groupFilter === key ? ' active' : '');
+    const nameZh = g.name_zh && g.name_zh !== g.name ? g.name_zh : '';
+    chip.innerHTML = `${nameZh || g.name}<span class="chip-count">${g.count}</span>`;
+    chip.title = g.name + (nameZh ? ' / ' + nameZh : '');
+    chip.onclick = () => {
+      groupFilter = groupFilter === key ? null : key;
+      renderGroupFilterBar();
+      openSections.clear();
+      resetAndRender();
+    };
+    bar.appendChild(chip);
+  });
+
+  if (groups.length > 50 && !groupSearchQuery) {
+    const more = document.createElement('span');
+    more.style.cssText = 'font-size:11px;color:var(--text3);white-space:nowrap;flex-shrink:0;padding:3px 6px';
+    more.textContent = `+${groups.length - 50} 更多 (輸入篩選)`;
+    more.className = 'group-chip';
+    bar.appendChild(more);
+  }
+}
+
+// === Filtering ===
 function getFiltered() {
   let passages = DATA.passages;
-  if (charFilter) passages = passages.filter(p => (p.characters || []).includes(charFilter));
+  if (groupFilter) {
+    passages = passages.filter(p => p.group === groupFilter);
+  }
   if (searchQuery) {
     const q = searchQuery.toLowerCase();
     passages = passages.filter(p =>
-      (p.content_zh || '').toLowerCase().includes(q) || (p.content || '').toLowerCase().includes(q) ||
-      (p.name || '').toLowerCase().includes(q) || (p.group || '').toLowerCase().includes(q) ||
-      (p._originalGroup || '').toLowerCase().includes(q) ||
-      (p.characters || []).some(c => c.toLowerCase().includes(q))
+      (p.content_zh || '').toLowerCase().includes(q) ||
+      (p.content || '').toLowerCase().includes(q) ||
+      (p.name || '').toLowerCase().includes(q) ||
+      (p.group || '').toLowerCase().includes(q)
     );
   }
   return passages;
 }
 
-function filterByChar(name) { charFilter = charFilter === name ? null : name; updateFilterBar(); resetAndRender(); }
-
-function updateFilterBar() {
-  const bar = document.getElementById('filterBar');
-  const row = document.getElementById('filterRow');
-  if (currentView === 'character' || charFilter) {
-    bar.style.display = 'flex';
-    const chars = DATA.meta.characters || [];
-    row.innerHTML = chars.map(c => {
-      const color = CHAR_COLORS[c] || '#64748b';
-      const active = charFilter === c ? ' active' : '';
-      return '<button class="filter-chip' + active + '" style="' + (charFilter===c ? 'background:'+color+'22;border-color:'+color+';color:'+color : '') + '" onclick="filterByChar(\'' + c + '\')">' + c + '</button>';
-    }).join('') + (charFilter ? '<button class="filter-chip" style="color:var(--warm)" onclick="charFilter=null;updateFilterBar();resetAndRender();">\u6E05\u9664</button>' : '');
-  } else { bar.style.display = 'none'; }
-}
-
+// === Passage Title ===
 function getPassageTitle(p) {
   const name = p.name || '';
-  if (name && !/^(g\d|passage_|p\d|#|\d+$)/.test(name) && name.length > 2 && name.length < 80) return name;
-  if (p.content_zh) { const first = p.content_zh.replace(/\[.*?\]/g, '').replace(/<<[^>]*?>>/g, '').split(/[\u3002\uFF01\uFF1F\n]/)[0].trim(); if (first.length > 4) return first.length > 50 ? first.substring(0, 47) + '...' : first; }
-  if (p.content) { const first = p.content.replace(/\[.*?\]/g, '').replace(/<<[^>]*?>>/g, '').replace(/=[^=]*?=/g, '').split(/[.!?\n]/)[0].trim(); if (first.length > 4) return first.length > 50 ? first.substring(0, 47) + '...' : first; }
+  if (name && name.length > 2 && name.length < 80) return name;
+  if (p.content_zh) {
+    const first = p.content_zh.replace(/\[.*?\]/g, '').replace(/<<[^>]*?>>/g, '').split(/[。！？\n]/)[0].trim();
+    if (first.length > 4) return first.length > 50 ? first.substring(0, 47) + '...' : first;
+  }
+  if (p.content) {
+    const first = p.content.replace(/\[.*?\]/g, '').replace(/<<[^>]*?>>/g, '').split(/[.!?\n]/)[0].trim();
+    if (first.length > 4) return first.length > 50 ? first.substring(0, 47) + '...' : first;
+  }
   return name || 'Passage ' + p.pid;
 }
 
+// === Character Extraction ===
+function extractCharacters(p) {
+  const chars = new Set();
+  const name = (p.name || '').toLowerCase();
+  const group = (p.group || '').toLowerCase();
+  const text = (p.content || '').substring(0, 500).toLowerCase();
+
+  const charPatterns = {
+    'Girlfriend': ['girlfriend', '$girlfriend', 'gf_'],
+    'QB': ['qb', 'quarterback'],
+    'Witch': ['witch', 'wicca'],
+    'Rival': ['rival'],
+    'Ryan': ['ryan'],
+    'Coach': ['coach'],
+    'Therapist': ['therapist', 'therapy'],
+    'Mom': ['$mother', 'your mom', 'your mother'],
+    'Dad': ['$father', 'your dad', 'your father'],
+    'Player': ['$player']
+  };
+
+  for (const [charName, patterns] of Object.entries(charPatterns)) {
+    for (const pat of patterns) {
+      if (name.includes(pat) || group.includes(pat) || text.includes(pat)) {
+        chars.add(charName);
+        break;
+      }
+    }
+  }
+  return Array.from(chars);
+}
+
+const CHAR_COLORS = {
+  'Player': '#e91e63', 'Girlfriend': '#ec4899', 'QB': '#3b82f6',
+  'Witch': '#8b5cf6', 'Rival': '#ef4444', 'Ryan': '#f59e0b',
+  'Coach': '#14b8a6', 'Therapist': '#6366f1', 'Mom': '#d946ef',
+  'Dad': '#0ea5e9'
+};
+
+// === Condition Extraction ===
+function extractConditions(text) {
+  if (!text) return [];
+  const conds = [];
+  const re = /<<(?:else)?if\s+([^>]+?)>>/g;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    conds.push(m[1].trim());
+  }
+  return conds;
+}
+
+// === Text Formatting ===
 function formatText(s) {
   if (!s) return '';
   let text = s;
-  // Extract [img[path]] before escaping
-  const imgs = [];
-  text = text.replace(/\[img\[([^\]]+?)\](?:\[[^\]]*\])?\]/g, function(m, src) { const i = imgs.length; imgs.push('<img src="' + escAttr(src) + '" class="passage-img" loading="lazy" alt="">'); return ' __IMG' + i + '__ '; });
-  text = text.replace(/<img\s[^>]*>/gi, function(m) { const i = imgs.length; imgs.push(m); return ' __IMG' + i + '__ '; });
-  // Strip macros
+  const images = [];
+
+  text = text.replace(/<img[^>]*src=["']([^"']+)["'][^>]*>/gi, (m, src) => { images.push(src); return `__IMG_${images.length-1}__`; });
+  text = text.replace(/\[img\[([^\]]+?)(?:\]\[[^\]]*?)?\]\]/gi, (m, src) => { images.push(src); return `__IMG_${images.length-1}__`; });
+  text = text.replace(/\[image:\s*([^\]]+)\]/gi, (m, src) => { images.push(src.trim().replace(/^\.\//, '')); return `__IMG_${images.length-1}__`; });
+
   text = text.replace(/<<[^>]*?>>/g, '');
   text = text.replace(/\[\[([^\]|]*?)(?:\|[^\]]*?)?\]\]/g, '');
   text = text.replace(/==[^=]*?==/g, '');
-  // Strip =14>>text=7>>text patterns (YTLAG conditional display)
-  text = text.replace(/=\d+>>/g, '');
   text = text.replace(/\[OR\]/g, '\n');
   text = text.replace(/\n{3,}/g, '\n\n').trim();
+
   let html = escHtml(text);
-  html = html.replace(/ __IMG(\d+)__ /g, function(_, i) { return imgs[+i] || ''; });
   html = html.replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>');
+
+  images.forEach((src, i) => {
+    html = html.replace(`__IMG_${i}__`,
+      `<img class="passage-img" src="${src}" loading="lazy" onclick="openLightbox(this.src)" style="max-width:100%;max-height:400px;border-radius:8px;margin:8px 0;cursor:pointer;display:block">`);
+  });
+
   return '<p>' + html + '</p>';
 }
 
-function escHtml(s) { if (!s) return ''; return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-function escAttr(s) { if (!s) return ''; return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-
-function passageHtml(p) {
-  const title = getPassageTitle(p);
-  const pid = p.pid != null ? '<span class="pid">#' + p.pid + '</span>' : '';
-  const tags = (p.tags && p.tags.length > 0) ? '<div class="tag-row">' + p.tags.map(t => '<span class="tag tag-default">' + escHtml(t) + '</span>').join('') + '</div>' : '';
-  // Show original group as mini-label for merged passages
-  const miniGroup = p._originalGroup ? '<span class="mini-group-label">' + escHtml(p._originalGroup) + '</span>' : '';
-  const chars = (p.characters && p.characters.length > 0) ? '<div class="char-pills">' + p.characters.map(c => { const color = CHAR_COLORS[c] || '#64748b'; return '<span class="char-pill" style="background:' + color + '18;color:' + color + ';border:1px solid ' + color + '33" onclick="filterByChar(\'' + c + '\')">' + c + '</span>'; }).join('') + '</div>' : '';
-
-  const TEXT_LIMIT = 4000;
-  let textHtml = '';
-  if (showZh && p.content_zh) { const t = p.content_zh.length > TEXT_LIMIT ? p.content_zh.substring(0, TEXT_LIMIT) : p.content_zh; textHtml += '<div class="text">' + formatText(t) + '</div>' + (p.content_zh.length > TEXT_LIMIT ? '<div style="color:var(--tag-cond);font-size:11px">... \u5DF2\u622A\u65B7</div>' : ''); }
-  if (showEn && p.content) { const t = p.content.length > TEXT_LIMIT ? p.content.substring(0, TEXT_LIMIT) : p.content; if (showZh && p.content_zh) { textHtml += '<div class="text-en' + (t.length > 300 ? ' collapsed' : '') + '">' + formatText(t) + '</div>'; } else { textHtml += '<div class="text">' + formatText(t) + '</div>'; } }
-  if (!textHtml) { textHtml = p.content_zh ? '<div class="text">' + formatText(p.content_zh) + '</div>' : p.content ? '<div class="text">' + formatText(p.content) + '</div>' : '<div class="text" style="color:var(--text3)">(\u7121\u5167\u5BB9)</div>'; }
-
-  let choicesHtml = '';
-  if (showChoices) { const re = /\[\[([^\]|]+?)(?:\|([^\]]*?))?\]\]/g; let cm, choices = []; while ((cm = re.exec(p.content || '')) !== null) { const t = cm[1].trim(); if (t.length > 0 && t.length < 100 && !/^\$/.test(t)) choices.push({text:t,target:cm[2]?cm[2].trim():t}); } if (choices.length > 0) { choicesHtml = '<div class="choices-row">' + choices.slice(0,15).map(c => '<span class="choice-btn" title="-> ' + escHtml(c.target) + '">' + escHtml(c.text) + '</span>').join('') + '</div>'; } }
-
-  return '<div class="passage"><div class="passage-header"><span class="passage-title">' + escHtml(title) + '</span>' + pid + '</div>' + miniGroup + tags + chars + textHtml + choicesHtml + '</div>';
+function escHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+// === Tag Class ===
+function tagClass(tag) {
+  const t = (tag || '').toLowerCase();
+  if (['action', 'workout', 'practice'].includes(t)) return 'tag-action';
+  if (['location', 'gym', 'school'].includes(t)) return 'tag-loc';
+  if (['story', 'dream', 'realitychange', 'trans'].includes(t)) return 'tag-cond';
+  if (['character', 'girlfriend', 'witch', 'qb'].includes(t)) return 'tag-char';
+  return 'tag-default';
+}
+
+// === Passage HTML ===
+function passageHtml(p) {
+  const title = getPassageTitle(p);
+  const pid = p.pid != null ? `<span class="pid">#${p.pid}</span>` : '';
+
+  const tags = (p.tags && p.tags.length > 0)
+    ? `<div class="tag-row">${p.tags.map(t => `<span class="tag ${tagClass(t)}">${escHtml(t)}</span>`).join('')}</div>`
+    : '';
+
+  const chars = extractCharacters(p);
+  const charHtml = chars.length > 0
+    ? `<div class="tag-row">${chars.map(c => {
+        const color = CHAR_COLORS[c] || '#64748b';
+        return `<span class="tag" style="background:${color}18;color:${color};border:1px solid ${color}33">${c}</span>`;
+      }).join('')}</div>`
+    : '';
+
+  let condHtml = '';
+  if (showCond) {
+    const conds = extractConditions(p.content || '');
+    if (conds.length > 0) {
+      condHtml = `<div class="tag-row">${conds.slice(0, 5).map(c =>
+        `<span class="tag tag-cond" title="${escHtml(c)}">${escHtml(c.length > 30 ? c.substring(0,27)+'...' : c)}</span>`
+      ).join('')}</div>`;
+    }
+  }
+
+  const TEXT_LIMIT = 5000;
+  let textHtml = '';
+  if (showZh && p.content_zh) {
+    const t = p.content_zh.length > TEXT_LIMIT ? p.content_zh.substring(0, TEXT_LIMIT) : p.content_zh;
+    const trunc = p.content_zh.length > TEXT_LIMIT ? `<div style="color:var(--tag-cond);font-size:11px;margin-top:4px">... 內容過長，已截斷 (${(p.content_zh.length/1000).toFixed(0)}K 字元)</div>` : '';
+    textHtml += `<div class="text">${formatText(t)}</div>${trunc}`;
+  }
+  if (showEn && p.content) {
+    const t = p.content.length > TEXT_LIMIT ? p.content.substring(0, TEXT_LIMIT) : p.content;
+    const trunc = p.content.length > TEXT_LIMIT ? `<div style="color:var(--tag-cond);font-size:11px;margin-top:4px">... truncated (${(p.content.length/1000).toFixed(0)}K chars)</div>` : '';
+    if (showZh && p.content_zh) {
+      const isLong = t.length > 300;
+      textHtml += `<div class="text-en${isLong ? ' collapsed' : ''}">${formatText(t)}</div>${trunc}`;
+    } else {
+      textHtml += `<div class="text">${formatText(t)}</div>${trunc}`;
+    }
+  }
+  if (!textHtml) {
+    textHtml = p.content_zh
+      ? `<div class="text">${formatText(p.content_zh.length > TEXT_LIMIT ? p.content_zh.substring(0, TEXT_LIMIT) : p.content_zh)}</div>`
+      : p.content
+        ? `<div class="text">${formatText(p.content.length > TEXT_LIMIT ? p.content.substring(0, TEXT_LIMIT) : p.content)}</div>`
+        : '<div class="text" style="color:var(--text3)">(empty)</div>';
+  }
+
+  const choiceLimit = 20;
+  let choicesHtml = '';
+  if (showChoices && p.choices && p.choices.length > 0) {
+    const shown = p.choices.slice(0, choiceLimit);
+    const overflow = p.choices.length > choiceLimit ? `<span style="font-size:11px;color:var(--text2)">+${p.choices.length - choiceLimit} 更多</span>` : '';
+    choicesHtml = `<div class="choices-row">${shown.map(c =>
+      `<span class="choice-btn" title="-> ${escHtml(c.target || '')}">${escHtml(c.text)}</span>`
+    ).join('')}${overflow}</div>`;
+  }
+
+  return `<div class="passage">
+    <div class="passage-header">
+      <span class="passage-title">${escHtml(title)}</span>
+      ${pid}
+    </div>
+    ${tags}${charHtml}${condHtml}${textHtml}${choicesHtml}
+  </div>`;
+}
+
+// === Chunked Rendering ===
 function renderChunked(container, passages, startIdx) {
   const end = Math.min(startIdx + CHUNK_SIZE, passages.length);
-  let html = ''; for (let i = startIdx; i < end; i++) html += passageHtml(passages[i]);
+  let html = '';
+  for (let i = startIdx; i < end; i++) {
+    html += passageHtml(passages[i]);
+  }
   container.insertAdjacentHTML('beforeend', html);
+
   if (end < passages.length) {
-    const sentinel = document.createElement('div'); sentinel.className = 'loading'; sentinel.style.padding = '16px';
-    sentinel.innerHTML = '<div style="font-size:11px;color:var(--text3)">\u8F09\u5165\u66F4\u591A (' + end + '/' + passages.length + ')...</div>';
+    const sentinel = document.createElement('div');
+    sentinel.className = 'loading';
+    sentinel.style.padding = '16px';
+    sentinel.innerHTML = `<div style="font-size:11px;color:var(--text3)">載入更多 (${end}/${passages.length})...</div>`;
     container.appendChild(sentinel);
-    const obs = new IntersectionObserver(entries => { if (entries[0].isIntersecting) { obs.disconnect(); sentinel.remove(); renderChunked(container, passages, end); } });
+
+    const obs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        obs.disconnect();
+        sentinel.remove();
+        renderChunked(container, passages, end);
+      }
+    });
     obs.observe(sentinel);
   }
 }
 
+// === Group Passages ===
 function groupPassages(passages) {
   const groups = new Map();
-  passages.forEach(p => { const g = p.group || '(\u672A\u5206\u985E)'; if (!groups.has(g)) groups.set(g, []); groups.get(g).push(p); });
+  passages.forEach(p => {
+    const g = p.group || '(uncategorized)';
+    if (!groups.has(g)) groups.set(g, []);
+    groups.get(g).push(p);
+  });
   if (DATA.groups && DATA.groups.length > 0) {
-    const ordered = []; const seen = new Set();
-    // Sort data groups by count desc, but put __other__ last
-    const sortedGroups = [...DATA.groups].sort((a,b) => {
-      if (a.name === '__other__') return 1;
-      if (b.name === '__other__') return -1;
-      return (b.count||0) - (a.count||0);
+    const ordered = [];
+    const seen = new Set();
+    DATA.groups.forEach(gi => {
+      const key = gi.id || gi.name;
+      if (groups.has(key)) { ordered.push([key, groups.get(key), gi]); seen.add(key); }
     });
-    sortedGroups.forEach(gi => { const key = gi.name || gi.id; if (groups.has(key)) { ordered.push([key, groups.get(key)]); seen.add(key); } });
-    groups.forEach((v, k) => { if (!seen.has(k)) ordered.push([k, v]); });
+    groups.forEach((v, k) => { if (!seen.has(k)) ordered.push([k, v, null]); });
     return ordered;
   }
-  return Array.from(groups.entries()).sort((a, b) => b[1].length - a[1].length);
+  return Array.from(groups.entries()).sort((a, b) => b[1].length - a[1].length).map(([k,v]) => [k, v, null]);
 }
 
+// === Narrative View ===
 function renderNarrativeView(passages) {
   const content = document.getElementById('content');
   content.innerHTML = '';
   const groups = groupPassages(passages);
-  if (groups.length === 0) { content.innerHTML = '<div class="empty-state">\u672A\u627E\u5230\u5339\u914D\u7684\u6BB5\u843D</div>'; return; }
 
-  groups.forEach(([gName, gPassages]) => {
+  if (groups.length === 0) {
+    content.innerHTML = '<div class="empty-state">未找到匹配的段落</div>';
+    return;
+  }
+
+  groups.forEach(([gName, gPassages, gMeta]) => {
     const isOpen = openSections.has('g:' + gName);
-    const iconInfo = GROUP_ICONS[gName] || ['#64748b', gName.substring(0,2).toUpperCase()];
-    const gInfo = (DATA.groups || []).find(g => (g.name || g.id) === gName);
-    const nameZh = gInfo ? (gInfo.name_zh || gInfo.name || gName) : gName;
-    const nameEn = gName !== '__other__' && nameZh !== gName ? gName : '';
-    const charCount = new Set(gPassages.flatMap(p => p.characters || [])).size;
+    const color = GROUP_COLORS[gName] || '#64748b';
+    const nameZh = (gMeta && gMeta.name_zh) ? gMeta.name_zh : gName;
+    const abbr = gName.substring(0, 3).toUpperCase();
 
     const header = document.createElement('div');
     header.className = 'group-header';
-    header.innerHTML =
-      '<div class="group-icon" style="background:' + iconInfo[0] + '22;color:' + iconInfo[0] + ';font-size:18px">' + iconInfo[1] + '</div>' +
-      '<span class="group-arrow' + (isOpen ? ' open' : '') + '">&#9654;</span>' +
-      '<div class="group-info"><h2>' + escHtml(nameZh) + '</h2>' + (nameEn ? '<div class="group-name-en">' + escHtml(nameEn) + '</div>' : '') + '</div>' +
-      '<div class="group-stats">' + (charCount > 0 ? '<span>' + charCount + ' \u89D2\u8272</span>' : '') + '<span><b>' + gPassages.length + '</b> \u6BB5\u843D</span></div>';
+    header.innerHTML = `
+      <div class="group-icon" style="background:${color}22;color:${color}">${abbr}</div>
+      <span class="group-arrow${isOpen ? ' open' : ''}">&#9654;</span>
+      <div class="group-info">
+        <h2>${escHtml(nameZh)}</h2>
+        <div class="group-name-en">${escHtml(gName)}</div>
+      </div>
+      <div class="group-stats">
+        <span><b>${gPassages.length}</b> 段落</span>
+      </div>
+    `;
 
     const body = document.createElement('div');
     body.className = 'group-body' + (isOpen ? ' open' : '');
-    header.addEventListener('click', () => { const nowOpen = body.classList.toggle('open'); header.querySelector('.group-arrow').classList.toggle('open', nowOpen); if (nowOpen) { openSections.add('g:' + gName); if (!body.dataset.rendered) { renderChunked(body, gPassages, 0); body.dataset.rendered = '1'; } } else { openSections.delete('g:' + gName); } });
-    if (isOpen && !body.dataset.rendered) { renderChunked(body, gPassages, 0); body.dataset.rendered = '1'; }
-    content.appendChild(header); content.appendChild(body);
+
+    header.addEventListener('click', () => {
+      const nowOpen = body.classList.toggle('open');
+      header.querySelector('.group-arrow').classList.toggle('open', nowOpen);
+      if (nowOpen) {
+        openSections.add('g:' + gName);
+        if (!body.dataset.rendered) {
+          renderChunked(body, gPassages, 0);
+          body.dataset.rendered = '1';
+        }
+      } else {
+        openSections.delete('g:' + gName);
+      }
+    });
+
+    if (isOpen && !body.dataset.rendered) {
+      renderChunked(body, gPassages, 0);
+      body.dataset.rendered = '1';
+    }
+
+    content.appendChild(header);
+    content.appendChild(body);
   });
 }
 
+// === Scene View ===
 function renderSceneView(passages) {
   const content = document.getElementById('content');
   content.innerHTML = '';
-  if (passages.length === 0) { content.innerHTML = '<div class="empty-state">\u672A\u627E\u5230\u5339\u914D\u7684\u6BB5\u843D</div>'; return; }
-  const groups = groupPassages(passages);
-  groups.forEach(([gName, gPassages]) => {
-    const iconInfo = GROUP_ICONS[gName] || ['#64748b', gName.substring(0,2).toUpperCase()];
-    const gInfo = (DATA.groups || []).find(g => (g.name || g.id) === gName);
-    const nameZh = gInfo ? (gInfo.name_zh || gName) : gName;
-    const isOpen = openSections.has('sv:' + gName);
-    const charSubs = new Map();
-    gPassages.forEach(p => { const key = (p.characters && p.characters.length > 0) ? p.characters[0] : '(\u4E00\u822C)'; if (!charSubs.has(key)) charSubs.set(key, []); charSubs.get(key).push(p); });
+
+  if (passages.length === 0) {
+    content.innerHTML = '<div class="empty-state">未找到匹配的段落</div>';
+    return;
+  }
+
+  const themeMap = {
+    'Transformation': ['Trans', 'RealityChange', 'FemmeFashions', 'VivianasSecret', 'Height', 'Wear'],
+    'Social': ['Girlfriend', 'QB', 'Rival', 'Lunch', 'AfterSchool', 'Team', 'ParentVisit'],
+    'Activities': ['Cheerleading', 'Practice', 'WorkOut', 'Gym', 'Game', 'WinterBall', 'Halloween'],
+    'Story': ['Prologue', 'Epilogue', 'Therapist', 'Morning', 'Witch', 'Baking']
+  };
+
+  const themes = new Map();
+  const grouped = groupPassages(passages);
+
+  grouped.forEach(([gName, gPassages, gMeta]) => {
+    let assigned = false;
+    for (const [theme, keywords] of Object.entries(themeMap)) {
+      if (keywords.some(k => gName.toLowerCase().includes(k.toLowerCase()))) {
+        if (!themes.has(theme)) themes.set(theme, []);
+        themes.get(theme).push([gName, gPassages, gMeta]);
+        assigned = true;
+        break;
+      }
+    }
+    if (!assigned) {
+      if (!themes.has('Other')) themes.set('Other', []);
+      themes.get('Other').push([gName, gPassages, gMeta]);
+    }
+  });
+
+  const themeColors = {
+    'Transformation': '#e91e63',
+    'Social': '#3b82f6',
+    'Activities': '#10b981',
+    'Story': '#8b5cf6',
+    'Other': '#64748b'
+  };
+  const themeZh = {
+    'Transformation': '變身相關',
+    'Social': '社交互動',
+    'Activities': '活動與運動',
+    'Story': '主線劇情',
+    'Other': '其他'
+  };
+
+  themes.forEach((subGroups, theme) => {
+    const isOpen = openSections.has('sv:' + theme);
+    const color = themeColors[theme] || '#64748b';
+    const totalP = subGroups.reduce((s, g) => s + g[1].length, 0);
 
     const header = document.createElement('div');
     header.className = 'group-header';
-    header.innerHTML = '<div class="group-icon" style="background:' + iconInfo[0] + '22;color:' + iconInfo[0] + ';font-size:18px">' + iconInfo[1] + '</div><span class="group-arrow' + (isOpen ? ' open' : '') + '">&#9654;</span><div class="group-info"><h2>' + escHtml(nameZh) + '</h2><div class="group-name-en">' + escHtml(gName) + ' &middot; ' + charSubs.size + ' \u5B50\u5834\u666F</div></div><div class="group-stats"><b>' + gPassages.length + '</b> \u6BB5\u843D</div>';
-    const body = document.createElement('div'); body.className = 'group-body' + (isOpen ? ' open' : '');
-    header.addEventListener('click', () => { const nowOpen = body.classList.toggle('open'); header.querySelector('.group-arrow').classList.toggle('open', nowOpen); if (nowOpen) { openSections.add('sv:' + gName); if (!body.dataset.rendered) { renderSceneSubs(body, charSubs, gName); body.dataset.rendered = '1'; } } else { openSections.delete('sv:' + gName); } });
-    if (isOpen && !body.dataset.rendered) { renderSceneSubs(body, charSubs, gName); body.dataset.rendered = '1'; }
-    content.appendChild(header); content.appendChild(body);
+    header.style.background = `linear-gradient(135deg, ${color}15, var(--bg2))`;
+    header.innerHTML = `
+      <div class="group-icon" style="background:${color}22;color:${color}">${theme.substring(0,3).toUpperCase()}</div>
+      <span class="group-arrow${isOpen ? ' open' : ''}">&#9654;</span>
+      <div class="group-info">
+        <h2>${themeZh[theme] || theme}</h2>
+        <div class="group-name-en">${theme} &middot; ${subGroups.length} 分組</div>
+      </div>
+      <div class="group-stats"><b>${totalP}</b> 段落</div>
+    `;
+
+    const body = document.createElement('div');
+    body.className = 'group-body' + (isOpen ? ' open' : '');
+
+    header.addEventListener('click', () => {
+      const nowOpen = body.classList.toggle('open');
+      header.querySelector('.group-arrow').classList.toggle('open', nowOpen);
+      if (nowOpen) {
+        openSections.add('sv:' + theme);
+        if (!body.dataset.rendered) {
+          renderSceneSubs(body, subGroups, theme);
+          body.dataset.rendered = '1';
+        }
+      } else {
+        openSections.delete('sv:' + theme);
+      }
+    });
+
+    if (isOpen && !body.dataset.rendered) {
+      renderSceneSubs(body, subGroups, theme);
+      body.dataset.rendered = '1';
+    }
+
+    content.appendChild(header);
+    content.appendChild(body);
   });
 }
 
-function renderSceneSubs(container, charSubs, groupName) {
-  Array.from(charSubs.entries()).sort((a, b) => { if (a[0]==='(\u4E00\u822C)') return 1; if (b[0]==='(\u4E00\u822C)') return -1; return b[1].length-a[1].length; }).forEach(([cn, sp]) => {
-    const sk = 'ss:'+groupName+':'+cn, isOpen = openSections.has(sk), color = CHAR_COLORS[cn]||'#64748b', isG = cn==='(\u4E00\u822C)';
-    const sub = document.createElement('div'); sub.className = 'char-section'; sub.style.margin = '4px 0';
-    sub.innerHTML = '<div class="char-section-header" style="padding:10px 14px"><div class="char-section-avatar" style="background:'+color+';width:32px;height:32px;font-size:13px">'+(isG?'?':cn[0])+'</div><div class="char-section-info"><h3 style="font-size:14px">'+(isG?'\u4E00\u822C':escHtml(cn))+'</h3><div class="meta">'+sp.length+' \u6BB5\u843D</div></div><span class="group-arrow'+(isOpen?' open':'')+'">&#9654;</span></div>';
-    const sb = document.createElement('div'); sb.className = 'char-section-body'+(isOpen?' open':'');
-    sub.querySelector('.char-section-header').addEventListener('click', () => { const no = sb.classList.toggle('open'); sub.querySelector('.group-arrow').classList.toggle('open',no); if(no){openSections.add(sk);if(!sb.dataset.rendered){renderChunked(sb,sp,0);sb.dataset.rendered='1';}}else{openSections.delete(sk);} });
-    if(isOpen&&!sb.dataset.rendered){renderChunked(sb,sp,0);sb.dataset.rendered='1';}
-    sub.appendChild(sb); container.appendChild(sub);
+function renderSceneSubs(container, subGroups, theme) {
+  subGroups.sort((a, b) => b[1].length - a[1].length);
+  subGroups.forEach(([gName, gPassages, gMeta]) => {
+    const secKey = 'ss:' + theme + ':' + gName;
+    const isOpen = openSections.has(secKey);
+    const color = GROUP_COLORS[gName] || '#64748b';
+    const nameZh = (gMeta && gMeta.name_zh) ? gMeta.name_zh : gName;
+
+    const sub = document.createElement('div');
+    sub.className = 'char-section';
+    sub.style.margin = '4px 0';
+    sub.innerHTML = `
+      <div class="char-section-header" style="padding:10px 14px">
+        <div class="char-section-avatar" style="background:${color};width:32px;height:32px;font-size:12px">
+          ${gName.substring(0,2).toUpperCase()}
+        </div>
+        <div class="char-section-info">
+          <h3 style="font-size:14px">${escHtml(nameZh)}</h3>
+          <div class="meta">${escHtml(gName)} &middot; ${gPassages.length} 段落</div>
+        </div>
+        <span class="group-arrow${isOpen ? ' open' : ''}">&#9654;</span>
+      </div>
+    `;
+
+    const subBody = document.createElement('div');
+    subBody.className = 'char-section-body' + (isOpen ? ' open' : '');
+
+    sub.querySelector('.char-section-header').addEventListener('click', () => {
+      const nowOpen = subBody.classList.toggle('open');
+      sub.querySelector('.group-arrow').classList.toggle('open', nowOpen);
+      if (nowOpen) {
+        openSections.add(secKey);
+        if (!subBody.dataset.rendered) {
+          renderChunked(subBody, gPassages, 0);
+          subBody.dataset.rendered = '1';
+        }
+      } else {
+        openSections.delete(secKey);
+      }
+    });
+
+    if (isOpen && !subBody.dataset.rendered) {
+      renderChunked(subBody, gPassages, 0);
+      subBody.dataset.rendered = '1';
+    }
+
+    sub.appendChild(subBody);
+    container.appendChild(sub);
   });
 }
 
+// === Character View ===
 function renderCharacterView(passages) {
-  const content = document.getElementById('content'); content.innerHTML = '';
-  const charMap = new Map();
-  passages.forEach(p => { (p.characters||[]).forEach(c => { if (!charMap.has(c)) charMap.set(c,[]); charMap.get(c).push(p); }); });
-  const noChar = passages.filter(p => !(p.characters && p.characters.length > 0));
-  if (charMap.size === 0 && noChar.length === 0) { content.innerHTML = '<div class="empty-state">\u672A\u627E\u5230\u5339\u914D\u7684\u6BB5\u843D</div>'; return; }
+  const content = document.getElementById('content');
+  content.innerHTML = '';
 
-  Array.from(charMap.entries()).sort((a,b)=>b[1].length-a[1].length).forEach(([cn,cp])=>{
-    if(charFilter&&charFilter!==cn) return;
-    const isOpen=openSections.has('c:'+cn),color=CHAR_COLORS[cn]||'#64748b';
-    const section=document.createElement('div');section.className='char-section';
-    section.innerHTML='<div class="char-section-header"><div class="char-section-avatar" style="background:'+color+'">'+cn[0]+'</div><div class="char-section-info"><h3>'+escHtml(cn)+'</h3><div class="meta">'+cp.length+' \u6BB5\u843D</div></div><span class="group-arrow'+(isOpen?' open':'')+'">&#9654;</span></div>';
-    const body=document.createElement('div');body.className='char-section-body'+(isOpen?' open':'');
-    section.querySelector('.char-section-header').addEventListener('click',()=>{const no=body.classList.toggle('open');section.querySelector('.group-arrow').classList.toggle('open',no);if(no){openSections.add('c:'+cn);if(!body.dataset.rendered){renderChunked(body,cp,0);body.dataset.rendered='1';}}else{openSections.delete('c:'+cn);}});
-    if(isOpen&&!body.dataset.rendered){renderChunked(body,cp,0);body.dataset.rendered='1';}
-    section.appendChild(body);content.appendChild(section);
+  const charMap = new Map();
+  passages.forEach(p => {
+    const chars = extractCharacters(p);
+    chars.forEach(c => {
+      if (!charMap.has(c)) charMap.set(c, []);
+      charMap.get(c).push(p);
+    });
   });
-  if(noChar.length>0&&!charFilter){
-    const isOpen=openSections.has('c:__none');
-    const section=document.createElement('div');section.className='char-section';
-    section.innerHTML='<div class="char-section-header"><div class="char-section-avatar" style="background:var(--text3)">?</div><div class="char-section-info"><h3>\u7121\u7279\u5B9A\u89D2\u8272</h3><div class="meta">'+noChar.length+' \u6BB5\u843D</div></div><span class="group-arrow'+(isOpen?' open':'')+'">&#9654;</span></div>';
-    const body=document.createElement('div');body.className='char-section-body'+(isOpen?' open':'');
-    section.querySelector('.char-section-header').addEventListener('click',()=>{const no=body.classList.toggle('open');section.querySelector('.group-arrow').classList.toggle('open',no);if(no){openSections.add('c:__none');if(!body.dataset.rendered){renderChunked(body,noChar,0);body.dataset.rendered='1';}}else{openSections.delete('c:__none');}});
-    if(isOpen&&!body.dataset.rendered){renderChunked(body,noChar,0);body.dataset.rendered='1';}
-    section.appendChild(body);content.appendChild(section);
+
+  const noChar = passages.filter(p => extractCharacters(p).length === 0);
+
+  if (charMap.size === 0 && noChar.length === 0) {
+    content.innerHTML = '<div class="empty-state">未找到匹配的段落</div>';
+    return;
+  }
+
+  const sorted = Array.from(charMap.entries()).sort((a, b) => b[1].length - a[1].length);
+
+  sorted.forEach(([charName, charPassages]) => {
+    const isOpen = openSections.has('c:' + charName);
+    const color = CHAR_COLORS[charName] || '#64748b';
+    const groups = {};
+    charPassages.forEach(p => {
+      const g = p.group || 'other';
+      groups[g] = (groups[g] || 0) + 1;
+    });
+    const topGroups = Object.entries(groups).sort((a,b) => b[1]-a[1]).slice(0,3).map(([k,v]) => `${k} ${v}`).join(' / ');
+
+    const section = document.createElement('div');
+    section.className = 'char-section';
+    section.innerHTML = `
+      <div class="char-section-header">
+        <div class="char-section-avatar" style="background:${color}">${charName[0]}</div>
+        <div class="char-section-info">
+          <h3>${escHtml(charName)}</h3>
+          <div class="meta">${charPassages.length} 段落 | ${topGroups}</div>
+        </div>
+        <span class="group-arrow${isOpen ? ' open' : ''}">&#9654;</span>
+      </div>
+    `;
+
+    const body = document.createElement('div');
+    body.className = 'char-section-body' + (isOpen ? ' open' : '');
+
+    section.querySelector('.char-section-header').addEventListener('click', () => {
+      const nowOpen = body.classList.toggle('open');
+      section.querySelector('.group-arrow').classList.toggle('open', nowOpen);
+      if (nowOpen) {
+        openSections.add('c:' + charName);
+        if (!body.dataset.rendered) {
+          renderChunked(body, charPassages, 0);
+          body.dataset.rendered = '1';
+        }
+      } else {
+        openSections.delete('c:' + charName);
+      }
+    });
+
+    if (isOpen && !body.dataset.rendered) {
+      renderChunked(body, charPassages, 0);
+      body.dataset.rendered = '1';
+    }
+
+    section.appendChild(body);
+    content.appendChild(section);
+  });
+
+  if (noChar.length > 0) {
+    const isOpen = openSections.has('c:__none');
+    const section = document.createElement('div');
+    section.className = 'char-section';
+    section.innerHTML = `
+      <div class="char-section-header">
+        <div class="char-section-avatar" style="background:var(--text3)">?</div>
+        <div class="char-section-info">
+          <h3>無特定角色</h3>
+          <div class="meta">${noChar.length} 段落</div>
+        </div>
+        <span class="group-arrow${isOpen ? ' open' : ''}">&#9654;</span>
+      </div>
+    `;
+    const body = document.createElement('div');
+    body.className = 'char-section-body' + (isOpen ? ' open' : '');
+
+    section.querySelector('.char-section-header').addEventListener('click', () => {
+      const nowOpen = body.classList.toggle('open');
+      section.querySelector('.group-arrow').classList.toggle('open', nowOpen);
+      if (nowOpen) {
+        openSections.add('c:__none');
+        if (!body.dataset.rendered) {
+          renderChunked(body, noChar, 0);
+          body.dataset.rendered = '1';
+        }
+      } else {
+        openSections.delete('c:__none');
+      }
+    });
+    if (isOpen && !body.dataset.rendered) {
+      renderChunked(body, noChar, 0);
+      body.dataset.rendered = '1';
+    }
+    section.appendChild(body);
+    content.appendChild(section);
   }
 }
 
+// === Render Dispatch ===
 function resetAndRender() {
-  document.querySelectorAll('[data-rendered]').forEach(el=>{if(!el.classList.contains('open'))el.dataset.rendered='';});
-  switch(currentView){case 'narrative':renderNarrativeView(getFiltered());break;case 'scene':renderSceneView(getFiltered());break;case 'character':renderCharacterView(getFiltered());break;}
+  const passages = getFiltered();
+  switch (currentView) {
+    case 'narrative': renderNarrativeView(passages); break;
+    case 'scene': renderSceneView(passages); break;
+    case 'character': renderCharacterView(passages); break;
+  }
 }
 
 function setActiveView(view) {
-  currentView=view;openSections.clear();
-  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById(view==='narrative'?'viewNarrative':view==='scene'?'viewScene':'viewChar').classList.add('active');
-  updateFilterBar();resetAndRender();
+  currentView = view;
+  openSections.clear();
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  const btnId = view === 'narrative' ? 'viewNarrative' : view === 'scene' ? 'viewScene' : 'viewChar';
+  document.getElementById(btnId).classList.add('active');
+  resetAndRender();
 }
 
+// === Lightbox ===
+function openLightbox(src) {
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightboxImg').src = src;
+  lb.classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+// === Init ===
 function init() {
-  renderBanner();updateFilterBar();
-  let st;document.getElementById('searchBox').addEventListener('input',e=>{clearTimeout(st);st=setTimeout(()=>{searchQuery=e.target.value.trim();openSections.clear();resetAndRender();},300);});
-  document.getElementById('showZh').addEventListener('change',e=>{showZh=e.target.checked;openSections.clear();resetAndRender();});
-  document.getElementById('showEn').addEventListener('change',e=>{showEn=e.target.checked;openSections.clear();resetAndRender();});
-  document.getElementById('showChoices').addEventListener('change',e=>{showChoices=e.target.checked;openSections.clear();resetAndRender();});
-  document.getElementById('viewNarrative').addEventListener('click',()=>setActiveView('narrative'));
-  document.getElementById('viewScene').addEventListener('click',()=>setActiveView('scene'));
-  document.getElementById('viewChar').addEventListener('click',()=>setActiveView('character'));
-  document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key==='/'){e.preventDefault();document.getElementById('searchBox').focus();}if(e.key==='1')setActiveView('narrative');if(e.key==='2')setActiveView('scene');if(e.key==='3')setActiveView('character');if(e.key==='Escape'){document.getElementById('searchBox').blur();if(charFilter){charFilter=null;updateFilterBar();resetAndRender();}}});
+  assignGroupColors();
+  renderBanner();
+  renderGroupFilterBar();
+
+  let searchTimeout;
+  document.getElementById('searchBox').addEventListener('input', e => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      searchQuery = e.target.value.trim();
+      openSections.clear();
+      resetAndRender();
+    }, 300);
+  });
+
+  document.getElementById('groupSearch').addEventListener('input', e => {
+    groupSearchQuery = e.target.value.trim();
+    renderGroupFilterBar();
+  });
+
+  document.getElementById('showZh').addEventListener('change', e => { showZh = e.target.checked; openSections.clear(); resetAndRender(); });
+  document.getElementById('showEn').addEventListener('change', e => { showEn = e.target.checked; openSections.clear(); resetAndRender(); });
+  document.getElementById('showChoices').addEventListener('change', e => { showChoices = e.target.checked; openSections.clear(); resetAndRender(); });
+  document.getElementById('showCond').addEventListener('change', e => { showCond = e.target.checked; openSections.clear(); resetAndRender(); });
+
+  document.getElementById('viewNarrative').addEventListener('click', () => setActiveView('narrative'));
+  document.getElementById('viewScene').addEventListener('click', () => setActiveView('scene'));
+  document.getElementById('viewChar').addEventListener('click', () => setActiveView('character'));
+
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.key === '/') { e.preventDefault(); document.getElementById('searchBox').focus(); }
+    if (e.key === '1') setActiveView('narrative');
+    if (e.key === '2') setActiveView('scene');
+    if (e.key === '3') setActiveView('character');
+    if (e.key === 'Escape') {
+      document.getElementById('searchBox').blur();
+      if (groupFilter) { groupFilter = null; renderGroupFilterBar(); openSections.clear(); resetAndRender(); }
+      closeLightbox();
+    }
+  });
+
   resetAndRender();
 }
 
